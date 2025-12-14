@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+    struct Category: Codable{
+        let id: Int
+        let iconKey: String
+        let colorHex: String
+        let name: String
+        let isEnabled: Bool
+    }

@@ -9,9 +9,23 @@ import SwiftUI
 
 @main
 struct SpendHabitNativeApp: App {
+    @State var methodVM = MethodViewModel()
+    @State var categoryVM = CategoryViewModel()
+    @State var incomeVM = IncomeViewModel()
+    @State var spendingVM = SpendingViewModel()
+    @State var budgetVM = BudgetViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
+                .environment(methodVM)
+                .environment(categoryVM)
+                .environment(incomeVM)
+                .environment(spendingVM)
+                .environment(budgetVM)
+                .task {
+                    await methodVM.loadMethods()
+                }
         }
     }
 }

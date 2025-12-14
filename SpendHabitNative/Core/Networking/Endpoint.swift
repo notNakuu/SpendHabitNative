@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+struct Endpoint{
+    let path: String
+    let queryItems: [URLQueryItem]?
+    let method: RequestMethod
+    let body: Encodable?
+    let headers: [String: String]?
+}

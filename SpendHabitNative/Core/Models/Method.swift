@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct Method: Codable{
+    let id: Int
+    let iconKey: String
+    let name: String
+}

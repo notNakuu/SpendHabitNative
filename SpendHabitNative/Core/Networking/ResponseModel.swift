@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+struct ResponseModel<T: Decodable>: Decodable {
+    let success: Int
+    let message: String
+    let data: T
+}
+
+

@@ -9,8 +9,9 @@ import SwiftUI
 
 struct SpendingsListView: View {
     var user: User
-    @State var spendingVM = SpendingViewModel()
+    @Environment(SpendingViewModel.self) var spendingVM
     @Environment(\.colorScheme) var colorScheme
+    @State private var isVisible = false
     
     var body: some View {
         ZStack(alignment: .bottomTrailing){
@@ -31,25 +32,35 @@ struct SpendingsListView: View {
                     .navigationTitle("Spendings")
                 }
             }
-            .task(id: user.id) {  // <-- ensure task runs once per user
-                await spendingVM.loadSpendings(for: user)
-            }
             Button{
-                
+                isVisible.toggle()
             } label: {
                 Image(systemName: "plus")
                     .font(.title2)
                     .foregroundColor(colorScheme == .light ? .white : .black)
                     .padding()
-                    .background(Color.accentColor.opacity(0.8))
+                    .background(Color.accentColor.opacity(0.7))
                     .clipShape(Circle())
+                    .shadow(color: .black.opacity(0.3), radius: 10)
             }
             .padding(30)
         }
+        .sheet(isPresented: $isVisible) {
+            NewSpendingView(user: user) {
+                Task{
+                    await spendingVM.loadSpendings(for: user)
+                }
+            }
+            .background(colorScheme == .light ? .white.opacity(0.8) : .black.opacity(0.8))
+            .presentationDetents([.fraction(0.6)])
+        }
+        
     }
 }
 
 
 #Preview {
-    SpendingsListView(user: User.mock)
+    PreviewContainer{
+        SpendingsListView(user: User.mock)
+    }
 }

@@ -6,13 +6,69 @@
 //
 
 import SwiftUI
+import Observation
 
 struct MainView: View {
+    @State var userVM = UserViewModel()
+    @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(IncomeViewModel.self) var incomeVM
+    @Environment(SpendingViewModel.self) var spendingVM
+    @Environment(BudgetViewModel.self) var budgetVM
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            VStack {
+                if let user = userVM.user {
+                    VStack {
+                        List {
+                            Section {
+                                NavigationLink(destination: SpendingsListView(user: user)) {
+                                    Text("See my spendings")
+                                        .foregroundStyle(.primary)
+                                        .bold()
+                                }
+                            }
+                            Section {
+                                NavigationLink(destination: IncomesListView(user: user)) {
+                                    Text("See my incomes")
+                                        .foregroundStyle(.primary)
+                                        .bold()
+                                }
+                            }
+                            Section {
+                                NavigationLink(destination: BudgetsListView(user: user)) {
+                                    Text("See my budgets")
+                                        .foregroundStyle(.primary)
+                                        .bold()
+                                }
+                            }
+                        }
+                        .listStyle(PlainListStyle())
+                    }
+                    .task{
+                        await spendingVM.loadSpendings(for: user)
+                        await categoryVM.loadCategories(user: user)
+                        await incomeVM.loadIncomes(user: user)
+                        await budgetVM.getCurrentMonthBudgets(user: user)
+                    }
+                    .navigationTitle(Text("Welcome back \(user.firstName)"))
+                }
+                
+                if let error = userVM.errorMessage {
+                    Text(error)
+                }
+            }
+            .task {
+                await userVM.loadTestUser()
+            }
+        }
     }
 }
 
+
 #Preview {
-    MainView()
+    PreviewContainer{
+        MainView(userVM: UserViewModel())
+    }
 }
+
