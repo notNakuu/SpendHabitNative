@@ -8,11 +8,32 @@
 import SwiftUI
 
 struct NavToMyCategoriesView: View {
+    @State var user: User
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack{
+            VStack(alignment: .leading){
+                NavigationLink(destination: MyCategoriesView(user: user)) {
+                    HStack{
+                        Text("My Categories")
+                            .font(.headline)
+                        Spacer()
+                        Image(systemName: "chevron.forward")
+                    }
+                    .foregroundStyle(colorScheme == .light ? .black : .white)
+                    .padding()
+                }
+            }
+            .background(.background)
+            .clipShape(RoundedRectangle(cornerRadius: 26))
+            .padding()
+            //.padding(.vertical, 10)
+        }
     }
 }
 
 #Preview {
-    NavToMyCategoriesView()
+    PreviewContainer{
+        NavToMyCategoriesView(user: User.mock)
+    }
 }

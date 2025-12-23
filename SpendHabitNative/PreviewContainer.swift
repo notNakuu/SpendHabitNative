@@ -60,7 +60,23 @@ struct PreviewContainer<Content: View>: View {
         return vm
     }()
 
-    private let spendingVM = SpendingViewModel()
+    private let spendingVM: SpendingViewModel = {
+        let vm = SpendingViewModel()
+        vm.spendings = [
+            Spending(id: 1, userId: 1, title: "Subscriptions", categoryId: 20, methodId: 2, createdDate: Date(), amount: 34),
+            Spending(id: 2, userId: 1, title: "Diesel 46L", categoryId: 17, methodId: 2, createdDate: Date(), amount: 60)
+        ]
+        
+        vm.totalSpentByCategory = [
+            CategorySpending(categoryId: 15, total: 100),
+            CategorySpending(categoryId: 16, total: 50),
+            CategorySpending(categoryId: 17, total: 150),
+            CategorySpending(categoryId: 18, total: 600),
+            CategorySpending(categoryId: 19, total: 0),
+            CategorySpending(categoryId: 20, total: 10)
+        ]
+        return vm
+    }()
     
     private let budgetVM: BudgetViewModel = {
         let vm = BudgetViewModel()

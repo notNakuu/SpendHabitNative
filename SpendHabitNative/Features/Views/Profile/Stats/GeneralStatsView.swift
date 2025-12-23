@@ -8,11 +8,59 @@
 import SwiftUI
 
 struct GeneralStatsView: View {
+    let user: User
+    let totalSpent: Double
+    let totalSaved: Double
+    @Environment(\.colorScheme) var colorScheme
+
+    var averageSpending: Double {
+        totalSpent / Double(user.monthsRegistered)
+    }
+
+    var averageSaving: Double {
+        totalSaved / Double(user.monthsRegistered)
+    }
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack{
+            Text("General Stats")
+                .font(.headline)
+                .padding(.horizontal, 30)
+                .foregroundStyle(.secondary)
+            
+            Spacer()
+        }
+        .padding(.vertical, 5)
+        
+        VStack(alignment: .leading, spacing: 12) {
+            statRow(title: "Total spent:", value: totalSpent)
+            Divider()
+            statRow(title: "Total saved:", value: totalSaved)
+            Divider()
+            statRow(title: "Average spent:", value: averageSpending)
+            Divider()
+            statRow(title: "Average saved:", value: averageSaving)
+        }
+        .padding()
+        .background(.background)
+        .clipShape(RoundedRectangle(cornerRadius: 26))
+        .padding(.horizontal)
+    }
+
+    private func statRow(title: String, value: Double) -> some View {
+        HStack {
+            Text(title)
+                //.font(.callout)
+                .bold()
+            Spacer()
+            Text("\(value.formatted()) €")
+                .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, 10)
     }
 }
 
+
 #Preview {
-    GeneralStatsView()
+    GeneralStatsView(user: User.mock, totalSpent: 1000, totalSaved: 400)
 }

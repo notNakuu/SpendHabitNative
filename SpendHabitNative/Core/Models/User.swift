@@ -14,6 +14,18 @@ struct User: Codable{
     let firstName: String
     let lastName: String
     let registeredDate: Date
+    
+    var monthsRegistered: Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents(
+            [.month],
+            from: registeredDate,
+            to: Date()
+        )
+
+        // At least 1 month to avoid division by zero
+        return max(components.month ?? 0, 1)
+    }
 }
 
 extension User {

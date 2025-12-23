@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct SpendHabitNativeApp: App {
+    @State var userVM = UserViewModel()
     @State var methodVM = MethodViewModel()
     @State var categoryVM = CategoryViewModel()
     @State var incomeVM = IncomeViewModel()
@@ -19,6 +20,7 @@ struct SpendHabitNativeApp: App {
         WindowGroup {
             MainView()
                 .environment(methodVM)
+                .environment(userVM)
                 .environment(categoryVM)
                 .environment(incomeVM)
                 .environment(spendingVM)

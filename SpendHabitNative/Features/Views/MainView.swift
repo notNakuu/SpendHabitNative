@@ -9,7 +9,7 @@ import SwiftUI
 import Observation
 
 struct MainView: View {
-    @State var userVM = UserViewModel()
+    @Environment(UserViewModel.self) var userVM
     @Environment(CategoryViewModel.self) var categoryVM
     @Environment(IncomeViewModel.self) var incomeVM
     @Environment(SpendingViewModel.self) var spendingVM
@@ -52,6 +52,13 @@ struct MainView: View {
                         await budgetVM.getCurrentMonthBudgets(user: user)
                     }
                     .navigationTitle(Text("Welcome back \(user.firstName)"))
+                    .toolbar{
+                        ToolbarItem {
+                            NavigationLink(destination: ProfileView(user: user)) {
+                                Label("Profile", systemImage: "person.fill")
+                            }
+                        }
+                    }
                 }
                 
                 if let error = userVM.errorMessage {
@@ -68,7 +75,6 @@ struct MainView: View {
 
 #Preview {
     PreviewContainer{
-        MainView(userVM: UserViewModel())
+        MainView()
     }
 }
-

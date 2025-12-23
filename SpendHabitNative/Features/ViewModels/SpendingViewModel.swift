@@ -18,6 +18,18 @@ class SpendingViewModel {
     var isLoading: Bool = false
     var network = NetworkService()
     var responseCode : Int?
+    var totalSpentByCategory: [CategorySpending] = []
+    var allTimeSpent: Double = 0
+    
+    var totalSpentForEachCategory: [Int: Double] {
+        Dictionary(grouping:
+            spendings,
+            by: { $0.categoryId }
+        )
+        .mapValues { spendings in
+            spendings.reduce(0) { $0 + $1.amount }
+        }
+    }
     
     
     func loadSpendings(for user: User) async{
@@ -27,7 +39,7 @@ class SpendingViewModel {
         }
         do {
             let endpoint = Endpoint(
-                path: "http://localhost:8080/spendings/currentMonth",
+                path: "\(APIConfig.baseURL)/spendings/currentMonth",
                 queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
                 method: RequestMethod.get,
                 body: nil,
@@ -49,7 +61,7 @@ class SpendingViewModel {
         guard let newSpending = newSpending else { return }
         do{
             let endpoint = Endpoint(
-                path: "http://localhost:8080/spendings/createSpending",
+                path: "\(APIConfig.baseURL)/spendings/createSpending",
                 queryItems: nil,
                 method: RequestMethod.post,
                 body: newSpending,
@@ -71,6 +83,54 @@ class SpendingViewModel {
                     }
                     self.errorMessage = error.localizedDescription
             
+        }
+    }
+    
+    func loadTotalAmountSpent(for user: User) async{
+        isLoading = true
+        defer {
+            isLoading = false
+        }
+        do {
+            let endpoint = Endpoint(
+                path: "\(APIConfig.baseURL)/spendings/totalSpent",
+                queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
+                method: RequestMethod.get,
+                body: nil,
+                headers: nil
+            )
+            
+            let result: ResponseModel<Double> = try await network.request(endpoint)
+            
+            DispatchQueue.main.async { self.allTimeSpent = result.data }
+        }
+        catch{
+            DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
+            print(errorMessage ?? "No error message")
+        }
+    }
+    
+    func loadTotalForEachCategory(for user: User) async{
+        isLoading = true
+        defer {
+            isLoading = false
+        }
+        do {
+            let endpoint = Endpoint(
+                path: "\(APIConfig.baseURL)/spendings/totalByCategory",
+                queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
+                method: RequestMethod.get,
+                body: nil,
+                headers: nil
+            )
+            
+            let result: ResponseModel<[CategorySpending]> = try await network.request(endpoint)
+            
+            DispatchQueue.main.async { self.totalSpentByCategory = result.data }
+        }
+        catch{
+            DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
+            print(errorMessage ?? "No error message")
         }
     }
 

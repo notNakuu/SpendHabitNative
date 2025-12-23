@@ -13,6 +13,7 @@ struct UpdateBudgetView: View {
     @State private var stepAmount: Double = 10
     @Environment(BudgetViewModel.self) var budgetVM
     @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     
     var onAdd: (() -> Void)? = nil
@@ -31,19 +32,26 @@ struct UpdateBudgetView: View {
                     .bold()
                 
                 // Step amount
-                Text("Step: \(stepAmount, specifier: "%.2f")€")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+                HStack{
+                    Text("Step:")
+                        .font(.headline)
+                    TextField("Step amount", value: $stepAmount, format: .number)
+                        .frame(maxWidth: 40)
+                        .font(.headline)
+                }
                 
                 // Buttons
                 HStack(spacing: 40) {
                     Button(action: {
-                        budget.amount -= stepAmount
+                        if budget.amount >= stepAmount {
+                            budget.amount -= stepAmount
+                        }
                     }) {
                         Text("-")
                             .font(.title)
+                            .foregroundColor(colorScheme == .light ? .white : .black)
                             .frame(width: 60, height: 60)
-                            .background(.red.opacity(0.2))
+                            .background(.red.opacity(0.4))
                             .clipShape(Circle())
                     }
                     
@@ -52,9 +60,9 @@ struct UpdateBudgetView: View {
                     }) {
                         Text("+")
                             .font(.title)
-                            .foregroundStyle(.primary)
+                            .foregroundColor(colorScheme == .light ? .white : .black)
                             .frame(width: 60, height: 60)
-                            .background(.green.opacity(0.2))
+                            .background(.green.opacity(0.4))
                             .clipShape(Circle())
                     }
                 }

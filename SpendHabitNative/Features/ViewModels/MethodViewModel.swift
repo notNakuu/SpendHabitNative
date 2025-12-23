@@ -21,7 +21,7 @@ class MethodViewModel{
         
         do{
             let endpoint = Endpoint(
-                path: "http://localhost:8080/methods/all",
+                path: "\(APIConfig.baseURL)/methods/all",
                 queryItems: nil,
                 method: RequestMethod.get,
                 body: nil,

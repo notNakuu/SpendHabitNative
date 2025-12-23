@@ -21,7 +21,7 @@ class CategoryViewModel{
         
         do{
             let endpoint = Endpoint(
-                path: "http://localhost:8080/categories/all",
+                path: "\(APIConfig.baseURL)/categories/all",
                 queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
                 method: RequestMethod.get,
                 body: nil,

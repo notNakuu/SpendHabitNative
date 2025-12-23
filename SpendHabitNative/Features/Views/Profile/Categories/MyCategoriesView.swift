@@ -8,11 +8,22 @@
 import SwiftUI
 
 struct MyCategoriesView: View {
+    @State var user: User
+    @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack{
+            List{
+                Text("Yea")
+            }
+            .navigationTitle("My Categories")
+        }
     }
 }
 
 #Preview {
-    MyCategoriesView()
+    PreviewContainer {
+        MyCategoriesView(user: User.mock)
+    }
 }

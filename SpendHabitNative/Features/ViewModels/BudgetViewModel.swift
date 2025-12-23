@@ -29,7 +29,7 @@ class BudgetViewModel {
         
         do{
             let endpoint = Endpoint(
-                path: "http://localhost:8080/budgets/currentMonth",
+                path: "\(APIConfig.baseURL)/budgets/currentMonth",
                 queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
                 method: RequestMethod.get,
                 body: nil,
@@ -63,8 +63,9 @@ class BudgetViewModel {
         guard let budgetId = budget.id else { return }
         
         do{
+            //print("Budget id: \(budgetId) -- UserId: \(user.id) -- CategoryId: \(budget.categoryId) -- Amount: \(budget.amount)")
             let endpoint = Endpoint(
-                path: "http://localhost:8080/budgets/update",
+                path: "\(APIConfig.baseURL)/budgets/update",
                 queryItems: [URLQueryItem(name: "budgetId", value: "\(budgetId)"),
                              URLQueryItem(name: "userId", value: "\(user.id)"),
                              URLQueryItem(name: "categoryId", value: "\(budget.categoryId)"),
@@ -77,6 +78,7 @@ class BudgetViewModel {
             let result: ResponseModel<String?> = try await network.request(endpoint)
             
             resultCode = result.success
+            //print(resultCode ?? -1)
         }
         catch{
             if let decodingError = error as? DecodingError {

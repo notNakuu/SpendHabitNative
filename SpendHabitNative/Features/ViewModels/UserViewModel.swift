@@ -22,7 +22,7 @@ class UserViewModel{
         
         do{
             let endpoint = Endpoint(
-                path: "http://localhost:8080/users/testUser",
+                path: "\(APIConfig.baseURL)/users/testUser",
                 queryItems: nil,
                 method: RequestMethod.get,
                 body: nil,

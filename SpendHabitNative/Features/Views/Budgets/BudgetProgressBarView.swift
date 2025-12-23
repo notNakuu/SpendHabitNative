@@ -8,11 +8,28 @@
 import SwiftUI
 
 struct BudgetProgressBarView: View {
+    let progress: Double       // 0.0 → 1.0
+    let color: Color
+    let height: CGFloat = 6
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                // Background (not spent)
+                RoundedRectangle(cornerRadius: height)
+                    .fill(color.opacity(0.3))
+                    .frame(height: height)
+
+                // Foreground (spent)
+                RoundedRectangle(cornerRadius: height)
+                    .fill(color)
+                    .frame(
+                        width: geo.size.width * min(progress, 1),
+                        height: height
+                    )
+            }
+        }
+        .frame(height: height)
     }
 }
 
-#Preview {
-    BudgetProgressBarView()
-}

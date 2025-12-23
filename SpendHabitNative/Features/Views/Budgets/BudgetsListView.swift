@@ -24,30 +24,10 @@ struct BudgetsListView: View {
         NavigationStack{
             List {
                 ForEach(budgetVM.budgets, id: \.id) { budget in
-                    let category = category(for: budget)
-
-                    HStack(spacing: 12) {
-                        if let icon = category?.iconKey {
-                            Image(systemName: icon)
-                                .foregroundStyle(
-                                    Color(hex: category?.colorHex ?? "#000000")
-                                )
+                    BudgetRowView(budget: budget)
+                        .onTapGesture {
+                            selectedBudget = budget
                         }
-
-                        VStack(alignment: .leading) {
-                            Text(category?.name ?? "Unknown category")
-                                .font(.headline)
-
-                            Text("Amount: \(budget.amount.formatted())")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .contentShape(Rectangle()) // Make whole row tappable
-                    .onTapGesture {
-                        selectedBudget = budget
-                    }
                 }
             }
             .navigationTitle(Text("To save: \(totalToSave.formatted())$"))
@@ -65,12 +45,7 @@ struct BudgetsListView: View {
             
         }
             
-        }
-
-        // Helper to get category
-        func category(for budget: Budget) -> Category? {
-            categoryVM.categories.first { $0.id == budget.categoryId }
-        }
+    }
 
 }
 

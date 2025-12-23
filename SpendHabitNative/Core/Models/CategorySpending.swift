@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+
+struct CategorySpending: Codable {
+    let categoryId: Int
+    let total: Double
+}
