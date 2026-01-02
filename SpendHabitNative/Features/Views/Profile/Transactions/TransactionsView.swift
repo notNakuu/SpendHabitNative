@@ -15,7 +15,7 @@ struct TransactionsView: View {
             Text("Recent Transactions")
                 .font(.title2.bold())
                 .padding(.horizontal, 20)
-                .padding(.vertical, 10)
+                .padding(.top, 15)
             Divider()
             VStack{
                 if transactions.isEmpty {
@@ -34,9 +34,10 @@ struct TransactionsView: View {
                     .padding(.horizontal, 20)
                 }
             }
+            .padding(.bottom, 15)
             
         }
-        .background(.background)
+        .background(colorScheme == .light ? .white : .gray.opacity(0.2))
         .clipShape(RoundedRectangle(cornerRadius: 26))
         .padding()
     

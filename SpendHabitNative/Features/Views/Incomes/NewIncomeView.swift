@@ -51,6 +51,7 @@ struct NewIncomeView: View {
                             if incomeVM.responseCode == 0{
                                 onAdd?()
                                 dismiss()
+                                incomeVM.newIncome = nil
                             }
                         }
                     }.disabled(incomeVM.newIncome?.title.isEmpty ?? true)
@@ -60,6 +61,7 @@ struct NewIncomeView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         dismiss()
+                        incomeVM.newIncome = nil
                     }
                 }
             }

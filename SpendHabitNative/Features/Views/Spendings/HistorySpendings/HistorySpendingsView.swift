@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct HistorySpendingsView: View {
+    @State var user: User
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #Preview {
-    HistorySpendingsView()
+    PreviewContainer{
+        HistorySpendingsView(user: User.mock)
+    }
 }

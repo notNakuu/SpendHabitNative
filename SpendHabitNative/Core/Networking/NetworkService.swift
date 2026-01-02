@@ -39,21 +39,41 @@ final class NetworkService{
         
         // <-- Here: use custom decoder with date strategy
         let decoder = JSONDecoder()
+
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [
+            .withInternetDateTime,
+            .withFractionalSeconds
+        ]
+
         decoder.dateDecodingStrategy = .custom { decoder in
             let container = try decoder.singleValueContainer()
             let dateStr = try container.decode(String.self)
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
-            formatter.timeZone = TimeZone(secondsFromGMT: 0)
-            
-            if let date = formatter.date(from: dateStr) {
+
+            // 1️⃣ Try real ISO8601 (with timezone)
+            let isoFormatter = ISO8601DateFormatter()
+            isoFormatter.formatOptions = [
+                .withInternetDateTime,
+                .withFractionalSeconds
+            ]
+
+            if let date = isoFormatter.date(from: dateStr) {
                 return date
             }
-            
+
+            // 2️⃣ Fallback: backend date WITHOUT timezone
+            let fallbackFormatter = DateFormatter()
+            fallbackFormatter.locale = Locale(identifier: "en_US_POSIX")
+            fallbackFormatter.timeZone = TimeZone.current
+            fallbackFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSS"
+
+            if let date = fallbackFormatter.date(from: dateStr) {
+                return date
+            }
+
             throw DecodingError.dataCorruptedError(
                 in: container,
-                debugDescription: "Cannot decode date string \(dateStr)"
+                debugDescription: "Unparseable date: \(dateStr)"
             )
         }
         return try decoder.decode(T.self, from: data)

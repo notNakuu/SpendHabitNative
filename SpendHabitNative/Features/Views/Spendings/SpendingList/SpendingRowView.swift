@@ -8,11 +8,37 @@
 import SwiftUI
 
 struct SpendingRowView: View {
+    var spending: Spending
+    @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(SpendingViewModel.self) var spendingVM
+    
+    var category: Category? {
+        categoryVM.categories.first { $0.id == spending.categoryId }
+    }
+
+    var color: Color {
+        Color(hex: category?.colorHex ?? "#000000")
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack(spacing: 12) {
+            if let icon = category?.iconKey {
+                Image(systemName: icon)
+                    .foregroundStyle(color)
+            }
+            Text(spending.title)
+                .font(.headline)
+            Spacer()
+            Text("\(spending.amount, specifier: "%.2f") €")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+        }
     }
 }
 
 #Preview {
-    SpendingRowView()
+    PreviewContainer{
+        SpendingRowView(spending: Spending.mock)
+    }
 }

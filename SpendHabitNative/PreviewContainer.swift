@@ -63,8 +63,8 @@ struct PreviewContainer<Content: View>: View {
     private let spendingVM: SpendingViewModel = {
         let vm = SpendingViewModel()
         vm.spendings = [
-            Spending(id: 1, userId: 1, title: "Subscriptions", categoryId: 20, methodId: 2, createdDate: Date(), amount: 34),
-            Spending(id: 2, userId: 1, title: "Diesel 46L", categoryId: 17, methodId: 2, createdDate: Date(), amount: 60)
+            Spending(id: 1, userId: 1, title: "Subscriptions", categoryId: 20, methodId: 2, createdDate: Date(), amount: 30),
+            Spending(id: 2, userId: 1, title: "Diesel 46L", categoryId: 17, methodId: 2, createdDate: Date(), amount: 68)
         ]
         
         vm.totalSpentByCategory = [

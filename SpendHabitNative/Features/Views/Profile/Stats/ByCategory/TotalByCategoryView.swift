@@ -10,6 +10,7 @@ import SwiftUI
 struct TotalByCategoryView: View {
     @State var user: User
     @Environment(SpendingViewModel.self) var spendingVM
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         HStack{
@@ -33,7 +34,7 @@ struct TotalByCategoryView: View {
 
         }
         .padding()
-        .background(.background)
+        .background(colorScheme == .light ? .white : .gray.opacity(0.2))
         .clipShape(RoundedRectangle(cornerRadius: 26))
         .padding(.horizontal)
         .task{

@@ -7,10 +7,23 @@
 
 import Foundation
 
-    struct Category: Codable{
-        let id: Int
-        let iconKey: String
-        let colorHex: String
-        let name: String
-        let isEnabled: Bool
-    }
+struct Category: Codable, Identifiable{
+    let id: Int
+    var iconKey: String
+    var colorHex: String
+    var name: String
+    var isEnabled: Bool
+}
+
+struct CreateCategoryRequest: Codable {
+    var name: String
+    var user: IdWrapper
+    var iconKey: String
+    var colorHex: String
+}
+
+struct UpdateCategoryRequest: Codable {
+    var name: String
+    var iconKey: String
+    var colorHex: String
+}

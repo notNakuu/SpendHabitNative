@@ -16,23 +16,38 @@ struct CategorySpendingPieChartView: View {
     }
 
     var body: some View {
-        
         GeometryReader { geo in
             Canvas { context, size in
-                var startAngle = Angle.zero
+                let center = CGPoint(x: size.width / 2, y: size.height / 2)
+                let outerRadius = min(size.width, size.height) / 2
+                let innerRadius = outerRadius * 0.6
 
+                // 1. Create the path for the hole
+                var maskPath = Path()
+                maskPath.addRect(CGRect(origin: .zero, size: size))
+                maskPath.addEllipse(in: CGRect(
+                    x: center.x - innerRadius,
+                    y: center.y - innerRadius,
+                    width: innerRadius * 2,
+                    height: innerRadius * 2
+                ))
+
+                // 2. MAKE THE INTERIOR EMPTY
+                //context.clip(to: maskPath, style: FillStyle(eoFill: true))
+
+                // 3. Draw segments
+                var startAngle = Angle.zero
                 for item in data {
                     let fraction = item.total / max(total, 0.0001)
                     let endAngle = startAngle + Angle(degrees: 360 * fraction)
-
                     let category = categoryVM.categories.first { $0.id == item.categoryId }
                     let color = Color(hex: category?.colorHex ?? "#000000")
 
                     let path = Path { p in
-                        p.move(to: CGPoint(x: size.width / 2, y: size.height / 2))
+                        p.move(to: center)
                         p.addArc(
-                            center: CGPoint(x: size.width / 2, y: size.height / 2),
-                            radius: min(size.width, size.height) / 2,
+                            center: center,
+                            radius: outerRadius,
                             startAngle: startAngle,
                             endAngle: endAngle,
                             clockwise: false
@@ -44,7 +59,6 @@ struct CategorySpendingPieChartView: View {
                 }
             }
         }
-        
     }
 }
 

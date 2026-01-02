@@ -5,14 +5,18 @@
 //  Created by Angel Mariano Mishchanchuk on 26/12/25.
 //
 
-import SwiftUI
+import Foundation
 
-struct HomeTab: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+enum HomeTab: Int, CaseIterable {
+    case incomes
+    case spendings
+    case budgets
+
+    var title: String {
+        switch self {
+        case .incomes: return "Incomes"
+        case .spendings: return "Spendings"
+        case .budgets: return "Budgets"
+        }
     }
-}
-
-#Preview {
-    HomeTab()
 }

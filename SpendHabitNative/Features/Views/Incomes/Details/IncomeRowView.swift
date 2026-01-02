@@ -8,11 +8,37 @@
 import SwiftUI
 
 struct IncomeRowView: View {
+    var income: Income
+    @Environment(MethodViewModel.self) var methodVM
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(IncomeViewModel.self) var incomeVM
+    
+    var method: Method? {
+        methodVM.methods.first { $0.id == income.methodId }
+    }
+
+    var color: Color {
+        Color(hex: method?.colorHex ?? "#000000")
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack(spacing: 12) {
+            if let icon = method?.iconKey {
+                Image(systemName: icon)
+                    .foregroundStyle(color)
+            }
+            Text(income.title)
+                .font(.headline)
+            Spacer()
+            Text("\(income.amount, specifier: "%.2f") €")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+        }
     }
 }
 
 #Preview {
-    IncomeRowView()
+    PreviewContainer{
+        IncomeRowView(income: Income(id: 1, userId: 1, title: "Test", methodId: 2, createdDate: .now, amount: 200))
+    }
 }

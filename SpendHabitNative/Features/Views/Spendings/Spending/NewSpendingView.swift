@@ -1,40 +1,40 @@
 //
-//  EditSpendingView.swift
+//  NewSpendingView.swift
 //  SpendHabitNative
 //
-//  Created by Angel Mariano Mishchanchuk on 2/1/26.
+//  Created by Angel Mariano Mishchanchuk on 8/12/25.
 //
 
 import SwiftUI
 
-struct EditSpendingView: View {
+struct NewSpendingView: View {
     var user: User
-    @State var spending: Spending
     var onAdd: (() -> Void)? = nil
     @Environment(\.dismiss) var dismiss
     
     @Environment(SpendingViewModel.self) var spendingVM
     @Environment(MethodViewModel.self) var methodVM
     @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(BudgetViewModel.self) var budgetVM
     
     var body: some View {
         NavigationView{
             Form {
-                Section{
+                if let _ = spendingVM.newSpending {
+                    
                     TextField("Spending name", text: Binding(
-                        get: { spending.title},
-                        set: { spending.title = $0 }
-
+                        get: { spendingVM.newSpending?.title ?? "" },
+                        set: { spendingVM.newSpending?.title = $0 }
                     ))
 
                     TextField("Amount", value: Binding(
-                        get: { spending.amount},
-                        set: { spending.amount = $0 }
+                        get: { spendingVM.newSpending?.amount ?? 0 },
+                        set: { spendingVM.newSpending?.amount = $0 }
                     ), format: .number)
                     
                     Picker("Payment Method", selection: Binding(
-                        get: { spending.methodId},
-                        set: { spending.methodId = $0 }
+                        get: { spendingVM.newSpending?.method.id ?? 0 },
+                        set: { spendingVM.newSpending?.method.id = $0 }
                         ))
                     {
                         ForEach(methodVM.methods, id: \.id) { method in
@@ -45,8 +45,8 @@ struct EditSpendingView: View {
                     }
                     
                     Picker("Category", selection: Binding(
-                        get: { spending.categoryId},
-                        set: { spending.categoryId = $0 }
+                        get: { spendingVM.newSpending?.category.id ?? 0 },
+                        set: { spendingVM.newSpending?.category.id = $0 }
                     )) {
                         ForEach(categoryVM.categories.filter { category in
                             if category.isEnabled{
@@ -58,38 +58,23 @@ struct EditSpendingView: View {
                                 .tag(category.id)
                         }
                     }
-                }
-                Section{
-                    DatePicker("Date", selection: Binding(
-                        get: { spending.createdDate},
-                        set: { spending.createdDate = $0 }
-                    ),
-                    displayedComponents: .date)
+
+                    
                 }
             }
-            .navigationTitle("Edit Spending")
+            .navigationTitle("New Spending")
             .toolbar{
                 ToolbarItem(placement: .confirmationAction){
-                    Button("Save") {
+                    Button("Add") {
                         Task {
-                            await spendingVM.updateSpending(
-                                id: spending.id!,
-                                userId: spending.userId,
-                                title: spending.title,
-                                categoryId: spending.categoryId,
-                                methodId: spending.methodId,
-                                createdDate: spending.createdDate,
-                                amount: spending.amount
-                            )
+                            await spendingVM.createSpending()
                             if spendingVM.responseCode == 0{
                                 onAdd?()
                                 dismiss()
                             }
                         }
-                    }
-                    .disabled(spending.title.isEmpty)
-                        .disabled(spending.amount <= 0)
-                        .disabled(spending.createdDate > Date())
+                    }.disabled(spendingVM.newSpending?.title.isEmpty ?? true)
+                        .disabled(spendingVM.newSpending?.amount ?? 0 <= 0)
                 }
                 
                 ToolbarItem(placement: .cancellationAction) {
@@ -100,11 +85,23 @@ struct EditSpendingView: View {
                 }
             }
         }
+        .onAppear {
+            if spendingVM.newSpending == nil {
+                spendingVM.newSpending = CreateSpendingRequest(
+                    user: IdWrapper(id: user.id),
+                    title: "",
+                    category: IdWrapper(id: categoryVM.categories.first!.id),
+                    method: IdWrapper(id: methodVM.methods.first!.id),
+                    amount: 0
+                )
+            }
+        }
     }
 }
 
+
 #Preview {
     PreviewContainer{
-        EditSpendingView(user: User.mock, spending: Spending.mock)
+        NewSpendingView(user: User.mock)
     }
 }

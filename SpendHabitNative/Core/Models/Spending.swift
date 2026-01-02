@@ -13,7 +13,7 @@ struct Spending: Codable, Identifiable {
     var title: String
     var categoryId: Int
     var methodId: Int
-    let createdDate: Date
+    var createdDate: Date
     var amount: Double
     
     enum CodingKeys: String, CodingKey {
@@ -35,10 +35,23 @@ struct CreateSpendingRequest: Codable {
     var amount: Double
 }
 
+struct UpdateSpendingRequest: Codable {
+    var id: Int
+    var title: String
+    var category: IdWrapper
+    var method: IdWrapper
+    var amount: Double
+    var createdDate: String
+}
+
 //create a struct to update
 
 struct IdWrapper: Codable {
     var id: Int
+}
+
+extension Spending{
+    static let mock = Spending(id: 1, userId: 1, title: "MacBook", categoryId: 19, methodId: 2, createdDate: Date(), amount: 2500)
 }
 
 

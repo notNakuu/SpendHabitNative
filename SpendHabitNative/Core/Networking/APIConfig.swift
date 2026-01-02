@@ -9,5 +9,5 @@ import Foundation
 
 
 enum APIConfig{
-    static let baseURL: String = "http://192.168.1.138:8080"
+    static let baseURL: String = "http://192.168.0.15:8080"
 }

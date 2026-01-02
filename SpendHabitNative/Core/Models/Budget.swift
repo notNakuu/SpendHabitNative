@@ -9,7 +9,7 @@ import Foundation
 
 
 struct Budget: Codable, Identifiable{
-    var id: Int?
+    let id: Int?
     var categoryId: Int
     var createdDate: Date
     var amount: Double

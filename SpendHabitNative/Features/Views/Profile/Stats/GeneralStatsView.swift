@@ -14,11 +14,11 @@ struct GeneralStatsView: View {
     @Environment(\.colorScheme) var colorScheme
 
     var averageSpending: Double {
-        totalSpent / Double(user.monthsRegistered)
+        totalSpent / Double(user.monthsRegistered+1)
     }
 
     var averageSaving: Double {
-        totalSaved / Double(user.monthsRegistered)
+        totalSaved / Double(user.monthsRegistered+1)
     }
 
     var body: some View {
@@ -42,7 +42,7 @@ struct GeneralStatsView: View {
             statRow(title: "Average saved:", value: averageSaving)
         }
         .padding()
-        .background(.background)
+        .background(colorScheme == .light ? .white : .gray.opacity(0.2))
         .clipShape(RoundedRectangle(cornerRadius: 26))
         .padding(.horizontal)
     }

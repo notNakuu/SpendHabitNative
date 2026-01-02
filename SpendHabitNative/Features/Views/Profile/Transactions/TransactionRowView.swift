@@ -31,7 +31,7 @@ struct TransactionRowView: View {
                 Text(transaction.title)
                     .font(.headline)
 
-                Text(transaction.isIncome ? "Income" : "Expense")
+                Text(transaction.isIncome ? "Income" : "Spending")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

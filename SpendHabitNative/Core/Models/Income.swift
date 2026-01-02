@@ -8,8 +8,8 @@
 import Foundation
 
 
-struct Income: Codable {
-    var id: Int?
+struct Income: Codable, Identifiable {
+    let id: Int?
     var userId: Int
     var title: String
     var methodId: Int

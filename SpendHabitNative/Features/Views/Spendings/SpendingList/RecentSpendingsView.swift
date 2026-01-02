@@ -7,12 +7,65 @@
 
 import SwiftUI
 
-struct RecentSpendingsVIew: View {
+struct RecentSpendingsView: View {
+    @State var user: User
+    @Environment(SpendingViewModel.self) var spendingVM
+    @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack{
+            VStack(alignment: .leading, spacing: 12) {
+
+                    HStack {
+                        Text("Recent spendings")
+                            .font(.title3)
+                            .bold()
+
+                        Spacer()
+
+                        NavigationLink {
+                            SpendingsListView(user: user)
+                        } label: {
+                            Text("See all")
+                                .font(.subheadline)
+                                .foregroundStyle(.blue)
+                            Image(systemName: "chevron.right")
+                                .font(.subheadline)
+                                .foregroundStyle(.blue)
+                        }
+                    }
+                
+                Divider()
+
+                    if spendingVM.spendings.isEmpty {
+                        Text("No recent spendings")
+                            .foregroundStyle(.secondary)
+                            .padding(.vertical, 20)
+                    } else {
+                        ForEach(spendingVM.spendings.prefix(3)) { spending in
+                            TransactionRowView(
+                                transaction: TransactionMapper.from(
+                                    spending: spending,
+                                    categoryVM: categoryVM
+                                )
+                            )
+
+                            if spending.id != spendingVM.spendings.prefix(3).last?.id {
+                                Divider()
+                            }
+                        }
+                    }
+                }
+                .padding()
+                .background(colorScheme == .light ? .white : .gray.opacity(0.2))
+                .clipShape(RoundedRectangle(cornerRadius: 26))
+        }
     }
 }
 
 #Preview {
-    RecentSpendingsVIew()
+    PreviewContainer{
+        RecentSpendingsView(user: User.mock)
+    }
 }

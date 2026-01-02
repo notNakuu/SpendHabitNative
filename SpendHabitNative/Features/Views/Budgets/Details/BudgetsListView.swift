@@ -9,52 +9,93 @@ import SwiftUI
 
 struct BudgetsListView: View {
     @State var user: User
+
     @Environment(BudgetViewModel.self) var budgetVM
     @Environment(IncomeViewModel.self) var incomeVM
     @Environment(CategoryViewModel.self) var categoryVM
     @Environment(\.colorScheme) var colorScheme
+
     @State private var selectedBudget: Budget? = nil
 
-
-    var totalToSave: Double{
+    var totalToSave: Double {
         incomeVM.totalMonthIncome - budgetVM.totalToSpend
     }
-    
-    var body: some View {
-        NavigationStack{
-            List {
-                ForEach(budgetVM.budgets.filter { budget in
-                    if let category = categoryVM.categories.first(where: { $0.id == budget.categoryId }) {
-                        return category.isEnabled || budget.amount > 0
-                    }
-                    return false
-                }, id: \.id) { budget in
-                    BudgetRowView(budget: budget)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            selectedBudget = budget
-                        }
-                }
 
+    // Extract filtered budgets once (cleaner + faster)
+    var visibleBudgets: [Budget] {
+        budgetVM.budgets.filter { budget in
+            guard let category = categoryVM.categories.first(where: { $0.id == budget.categoryId }) else {
+                return false
             }
-            .navigationTitle(Text("To save: \(totalToSave.formatted())$"))
-            // Present the sheet when selectedBudget is non-nil
+            return category.isEnabled || budget.amount > 0
+        }
+    }
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 16) {
+
+                    VStack(alignment: .leading, spacing: 12) {
+
+                        // Header
+                        HStack {
+                            Text("Budgets")
+                                .font(.title3)
+                                .bold()
+
+                            Spacer()
+                            
+                            Text("To save: \(totalToSave, specifier: "%.2f") €")
+                                .font(.title3)
+                                .foregroundStyle(.secondary)
+                                .bold()
+                        }
+
+                        Divider()
+
+                        // Content
+                        if visibleBudgets.isEmpty {
+                            Text("No budgets configured")
+                                .foregroundStyle(.secondary)
+                                .padding(.vertical, 20)
+                        } else {
+                            ForEach(visibleBudgets) { budget in
+                                BudgetRowView(budget: budget)
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        selectedBudget = budget
+                                    }
+
+                                if budget.id != visibleBudgets.last?.id {
+                                    Divider()
+                                }
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(colorScheme == .light ? .white : .gray.opacity(0.2))
+                    .clipShape(RoundedRectangle(cornerRadius: 26))
+                }
+                //.padding()
+            }
             .sheet(item: $selectedBudget) { budget in
-                UpdateBudgetView(budget: budget, user: user){
-                    Task{
+                UpdateBudgetView(budget: budget, user: user) {
+                    Task {
                         await budgetVM.getCurrentMonthBudgets(user: user)
                     }
                 }
-                    .background(colorScheme == .light ? .white.opacity(0.8) : .black.opacity(0.8))
-                    .presentationDetents([.fraction(0.5)])
+                .background(
+                    colorScheme == .light
+                    ? .white.opacity(0.8)
+                    : .black.opacity(0.8)
+                )
+                .presentationDetents([.fraction(0.5)])
             }
-            
-            
         }
-            
     }
-
 }
+
 
 #Preview {
     PreviewContainer{

@@ -80,7 +80,8 @@ struct ProfileView: View {
             }
             .scrollIndicators(.hidden)
             .navigationTitle("\(user.firstName) \(user.lastName)")
-            .background(colorScheme == .light ? .black.opacity(0.03) : .white.opacity(0.06))
+            .navigationBarTitleDisplayMode(.large)
+            .background(colorScheme == .light ? .black.opacity(0.03) : .black)
             
         }
         .task{

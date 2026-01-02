@@ -17,8 +17,18 @@ class IncomeViewModel{
     var responseCode: Int?
     var allTimeIncome: Double = 0
     
-    var totalIncome: Double{
+    var totalMonthIncome: Double{
         incomes.reduce(0){ $0 + $1.amount }
+    }
+    
+    var totalMonthIncomeForEachMethod: [Int: Double]{
+        Dictionary(grouping:
+            incomes,
+            by: { (income: Income) in income.methodId }
+        )
+        .mapValues { (incomes: [Income]) in
+            incomes.reduce(0) { $0 + $1.amount }
+        }
     }
     
     func loadIncomes(user: User) async{

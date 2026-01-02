@@ -7,12 +7,32 @@
 
 import SwiftUI
 
-struct NewToHistoryIncomesView: View {
+struct NavToHistoryIncomesView: View {
+    @State var user: User
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack{
+            VStack(alignment: .leading){
+                NavigationLink(destination: HistoryIncomesView(user: user)) {
+                    HStack{
+                        Text("History of Incomes")
+                            .font(.headline)
+                        Spacer()
+                        Image(systemName: "chevron.forward")
+                    }
+                    .foregroundStyle(colorScheme == .light ? .black : .white)
+                    .padding()
+                }
+            }
+            .background(colorScheme == .light ? .white : .gray.opacity(0.2))
+            .clipShape(RoundedRectangle(cornerRadius: 26))
+        }
     }
 }
 
 #Preview {
-    NewToHistoryIncomesView()
+    PreviewContainer{
+        NavToHistoryIncomesView(user: User.mock)
+    }
 }

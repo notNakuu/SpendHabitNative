@@ -8,11 +8,39 @@
 import SwiftUI
 
 struct DailySpendingChartSectionView: View {
+    @Environment(SpendingViewModel.self) var spendingVM
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+
+        // Section header
+        HStack {
+            Text("Daily spending")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+
+        // Card
+        VStack(alignment: .leading, spacing: 12) {
+
+            DailySpendingBarChartView(
+                data: spendingVM.dailySpendingByDay
+            )
+
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 26)
+                .fill(colorScheme == .light ? .white : .gray.opacity(0.2))
+        )
+        //.padding(.horizontal, 10)
     }
 }
 
 #Preview {
-    DailySpendingChartSectionView()
+    PreviewContainer {
+        DailySpendingChartSectionView()
+    }
 }
