@@ -9,7 +9,7 @@ import Foundation
 
 
 struct Income: Codable, Identifiable {
-    let id: Int?
+    let id: Int
     var userId: Int
     var title: String
     var methodId: Int
@@ -33,6 +33,18 @@ struct CreateIncomeRequest: Codable {
     var title: String
     var method: IdWrapper
     var amount: Double
+}
+
+struct UpdateIncomeRequest: Codable {
+    var id: Int
+    var title: String
+    var method: IdWrapper
+    var amount: Double
+    var createdDate: String
+}
+
+extension Income{
+    static let mock = Income(id: 1, userId: 1, title: "Salary", methodId: 1, createdDate: Date(), amount: 10000)
 }
 
 //create a struct to update

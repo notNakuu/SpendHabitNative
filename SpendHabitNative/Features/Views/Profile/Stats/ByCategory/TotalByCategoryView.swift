@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TotalByCategoryView: View {
-    @State var user: User
+    let user: User
     @Environment(SpendingViewModel.self) var spendingVM
     @Environment(\.colorScheme) var colorScheme
     

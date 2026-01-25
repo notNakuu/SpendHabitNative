@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @State var user: User
+    let user: User
     @Environment(UserViewModel.self) var userVM
     @Environment(CategoryViewModel.self) var categoryVM
     @Environment(IncomeViewModel.self) var incomeVM
@@ -79,8 +79,19 @@ struct ProfileView: View {
                 
             }
             .scrollIndicators(.hidden)
-            .navigationTitle("\(user.firstName) \(user.lastName)")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    VStack {
+                        Button{
+                                    
+                        }label:{
+                            Image(systemName: "gearshape.fill")
+                        }
+                    }
+                }
+            }
+            .navigationTitle("\(user.firstName)")
             .background(colorScheme == .light ? .black.opacity(0.03) : .black)
             
         }

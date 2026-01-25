@@ -42,6 +42,11 @@ struct TotalPieChartView: View {
                         id: \.key
                     ) { key, total in
                         let category = categoryVM.categories.first { $0.id == key }
+                        
+                        let percentage = spendingVM.totalMonthlySpendings > 0
+                        ? (total / spendingVM.totalMonthlySpendings) * 100
+                            : 0
+
 
                         HStack {
                             Circle()
@@ -53,7 +58,7 @@ struct TotalPieChartView: View {
                                     .font(.subheadline)
                                     .bold()
 
-                                Text("\(total, specifier: "%.2f") €")
+                                Text("\(percentage, specifier: "%.1f")%")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -68,14 +73,14 @@ struct TotalPieChartView: View {
                 CategorySpendingMonthPieChartView(
                     data: spendingVM.totalSpentMonthlyForEachCategory
                 )
-                .frame(height: 220)
+                .frame(height: showLegend ? 150 : 220)
 
                 VStack(spacing: 4) {
                     Text("Total")
-                        .font(.title2.bold())
+                        .font(showLegend ? .title2.bold() : .title.bold())
 
                     Text("\(spendingVM.totalMonthlySpendings.formatted()) €")
-                        .font(.title3.bold())
+                        .font(showLegend ? .headline.bold() : .title2.bold())
                 }
             }
         }

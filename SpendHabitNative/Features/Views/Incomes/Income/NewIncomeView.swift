@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NewIncomeView: View {
-    var user: User
+    let user: User
     var onAdd: (() -> Void)? = nil
     
     @Environment(IncomeViewModel.self) var incomeVM
@@ -28,7 +28,7 @@ struct NewIncomeView: View {
                     TextField("Amount", value: Binding(
                         get: { incomeVM.newIncome?.amount ?? 0 },
                         set: { incomeVM.newIncome?.amount = $0 }
-                    ), format: .number)
+                    ), format: .number).keyboardType(.decimalPad)
                     
                     Picker("Income Method", selection: Binding(
                         get: { incomeVM.newIncome?.method.id ?? 0 },

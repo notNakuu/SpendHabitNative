@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EditSpendingView: View {
-    var user: User
+    let user: User
     @State var spending: Spending
     var onAdd: (() -> Void)? = nil
     @Environment(\.dismiss) var dismiss
@@ -30,7 +30,7 @@ struct EditSpendingView: View {
                     TextField("Amount", value: Binding(
                         get: { spending.amount},
                         set: { spending.amount = $0 }
-                    ), format: .number)
+                    ), format: .number).keyboardType(.decimalPad)
                     
                     Picker("Payment Method", selection: Binding(
                         get: { spending.methodId},
@@ -73,7 +73,7 @@ struct EditSpendingView: View {
                     Button("Save") {
                         Task {
                             await spendingVM.updateSpending(
-                                id: spending.id!,
+                                id: spending.id,
                                 userId: spending.userId,
                                 title: spending.title,
                                 categoryId: spending.categoryId,
@@ -95,7 +95,6 @@ struct EditSpendingView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         dismiss()
-                        spendingVM.newSpending = nil
                     }
                 }
             }

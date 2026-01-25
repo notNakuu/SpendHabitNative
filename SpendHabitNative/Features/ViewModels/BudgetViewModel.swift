@@ -16,12 +16,16 @@ class BudgetViewModel {
     var errorMessage: String? = nil
     var resultCode: Int? = nil
     
+    private(set) var hasLoaded = false
+    
     var totalToSpend: Double {
         budgets.reduce(0){ $0 + $1.amount }
     }
     
     
     func getCurrentMonthBudgets(user: User) async {
+        guard !hasLoaded else { return }
+        hasLoaded = true
         isLoading = true
         defer {
             isLoading = false
@@ -55,6 +59,7 @@ class BudgetViewModel {
     }
     
     func updateBudget(budget: Budget, user: User) async {
+        hasLoaded = false
         isLoading = true
         defer {
             isLoading = false

@@ -17,6 +17,8 @@ class IncomeViewModel{
     var responseCode: Int?
     var allTimeIncome: Double = 0
     
+    private(set) var hasLoaded = false
+    
     var totalMonthIncome: Double{
         incomes.reduce(0){ $0 + $1.amount }
     }
@@ -32,6 +34,8 @@ class IncomeViewModel{
     }
     
     func loadIncomes(user: User) async{
+        guard !hasLoaded else { return }
+        hasLoaded = true
         isLoading = true
         defer { isLoading = false}
         
@@ -63,6 +67,7 @@ class IncomeViewModel{
     
     @MainActor
     func createIncome() async {
+        hasLoaded = false
         guard let newIncome = newIncome else { return }
         do{
             let endpoint = Endpoint(
@@ -117,6 +122,74 @@ class IncomeViewModel{
             self.errorMessage = error.localizedDescription
         }
     }
+    
+    func deleteIncome(income: Income) async {
+        incomes.removeAll { $0.id == income.id }
+        hasLoaded = false
+        do{
+            let endpoint = Endpoint(
+                path: "\(APIConfig.baseURL)/incomes/delete",
+                queryItems: [URLQueryItem(name: "incomeId", value: "\(income.id)")],
+                method: RequestMethod.post,
+                body: nil,
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                ]
+            )
+            
+            let result: ResponseModel<String?> = try await network.request(endpoint)
+            print("the code is: \(result.success)")
+            
+            responseCode = result.success
+        }
+        catch{
+            DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
+            print(errorMessage ?? "No error message in spending vm")
+        }
+    }
+    
+    func updateIncome(id: Int, userId: Int, title: String, methodId: Int, createdDate: Date, amount: Double) async {
+        hasLoaded = false
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        let updateIncome = UpdateIncomeRequest(
+            id: id,
+            title: title,
+            method: IdWrapper(id: methodId),
+            amount: amount,
+            createdDate: formatter.string(from: createdDate)
+        )
+
+        print("Entered the function")
+        
+        isLoading = true
+        defer { isLoading = false}
+        
+        do{
+            let endpoint = Endpoint(
+                path: "\(APIConfig.baseURL)/incomes/update",
+                queryItems: nil,
+                method: RequestMethod.post,
+                body: updateIncome,
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                ]
+            )
+            
+            let result: ResponseModel<String?> = try await network.request(endpoint)
+            print("the code is: \(result.success)")
+            
+            responseCode = result.success
+        }
+        catch{
+            DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
+            print(errorMessage ?? "No error message in spending vm")
+        }
+    }
+
     
     
 }

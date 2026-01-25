@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct RecentIncomesView: View {
-    
-    @State var user: User
+    let user: User
     @Environment(IncomeViewModel.self) var incomeVM
     @Environment(MethodViewModel.self) var methodVM
     @Environment(\.colorScheme) var colorScheme

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecentSpendingsView: View {
-    @State var user: User
+    let user: User
     @Environment(SpendingViewModel.self) var spendingVM
     @Environment(CategoryViewModel.self) var categoryVM
     @Environment(\.colorScheme) var colorScheme

@@ -20,11 +20,33 @@ struct BudgetSpendingMonthPieChartView: View {
     ]
     
     var moneyLeft: Double{
-        budgetVM.totalToSpend - spendingVM.totalMonthlySpendings
+        var left = budgetVM.totalToSpend - spendingVM.totalMonthlySpendings
+        
+        if left < 0{
+            left = 0
+        }
+        
+        return left
+        
     }
     
     var toSave: Double{
-        incomeVM.totalMonthIncome - budgetVM.totalToSpend
+        var toSave: Double = 0
+        let totalSpent = spendingVM.totalMonthlySpendings
+        let totalToSpend = budgetVM.totalToSpend
+        
+        if totalToSpend >= totalSpent {
+            toSave = incomeVM.totalMonthIncome - budgetVM.totalToSpend
+        }
+        else{
+            toSave = incomeVM.totalMonthIncome - spendingVM.totalMonthlySpendings
+        }
+        if toSave < 0 {
+            toSave = 0
+        }
+        
+        return toSave
+        
     }
     
     var body: some View {

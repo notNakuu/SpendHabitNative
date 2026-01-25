@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BudgetsListView: View {
-    @State var user: User
+    let user: User
 
     @Environment(BudgetViewModel.self) var budgetVM
     @Environment(IncomeViewModel.self) var incomeVM
@@ -17,8 +17,16 @@ struct BudgetsListView: View {
 
     @State private var selectedBudget: Budget? = nil
 
-    var totalToSave: Double {
-        incomeVM.totalMonthIncome - budgetVM.totalToSpend
+    var totalToSave: Double{
+        var toSave: Double = 0
+
+        toSave = incomeVM.totalMonthIncome - budgetVM.totalToSpend
+        if toSave < 0 {
+            toSave = 0
+        }
+        
+        return toSave
+        
     }
 
     // Extract filtered budgets once (cleaner + faster)

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SpendingsListView: View {
-    var user: User
+    let user: User
     @Environment(SpendingViewModel.self) var spendingVM
     @Environment(\.colorScheme) var colorScheme
     
@@ -32,16 +32,30 @@ struct SpendingsListView: View {
                     // Sort days descending (most recent first)
                     ForEach(groupedSpendings.keys.sorted(by: >), id: \.self) { day in
                         Section(header: Text(dayFormatted(day))) {
-                            ForEach(groupedSpendings[day] ?? [], id: \.id) { spending in
+                            let spendingsForDay = groupedSpendings[day] ?? []
+                            ForEach(spendingsForDay, id: \.id) { spending in
                                 SpendingRowView(spending: spending)
-                                    .contentShape(Rectangle()) // makes whole row tappable
+                                    .contentShape(Rectangle())
                                     .onTapGesture {
                                         selectedSpending = spending
                                     }
                             }
-
+                            .onDelete { indexSet in
+                                for index in indexSet {
+                                    let spendingToDelete = spendingsForDay[index]
+                                    Task {
+                                        await spendingVM.deleteSpending(spending: spendingToDelete)
+                                        
+                                        if spendingVM.responseCode == 1 {
+                                            await spendingVM.loadSpendings(for: user)
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
+
+                    
                 }
                 .navigationTitle("Spendings")
                 .navigationBarTitleDisplayMode(.large)

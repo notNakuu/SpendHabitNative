@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BudgetHomeView: View {
-    @State var user: User
+    let user: User
     
     var body: some View {
         NavigationStack{

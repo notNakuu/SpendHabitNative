@@ -9,6 +9,11 @@ import SwiftUI
 
 @main
 struct SpendHabitNativeApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+    
+    @State private var reloadID = UUID()
+    @State private var lastBackgroundDate: Date?
+    
     @State var userVM = UserViewModel()
     @State var methodVM = MethodViewModel()
     @State var categoryVM = CategoryViewModel()
@@ -18,7 +23,8 @@ struct SpendHabitNativeApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainView()
+            WelcomeView()
+                .id(reloadID)
                 .environment(methodVM)
                 .environment(userVM)
                 .environment(categoryVM)
@@ -29,5 +35,35 @@ struct SpendHabitNativeApp: App {
                     await methodVM.loadMethods()
                 }
         }
+        .onChange(of: scenePhase){ _, newPhase in
+            switch newPhase{
+            case .background:
+                lastBackgroundDate = Date()
+            case .active:
+                if let last = lastBackgroundDate {
+                    let elapsed = Date().timeIntervalSince(last)
+                    if elapsed > 15 * 60 {
+                        resetApp()
+                    }
+                }
+            default:
+                break
+            }
+        
+        }
     }
+    
+    private func resetApp() {
+        // redo the VMs
+        userVM = UserViewModel()
+        methodVM = MethodViewModel()
+        categoryVM = CategoryViewModel()
+        incomeVM = IncomeViewModel()
+        spendingVM = SpendingViewModel()
+        budgetVM = BudgetViewModel()
+
+        // rebuild the UI
+        reloadID = UUID()
+    }
+    
 }

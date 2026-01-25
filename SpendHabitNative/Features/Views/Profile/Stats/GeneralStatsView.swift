@@ -23,7 +23,7 @@ struct GeneralStatsView: View {
 
     var body: some View {
         HStack{
-            Text("General Stats")
+            Text("General Stats Since Using App")
                 .font(.headline)
                 .padding(.horizontal, 30)
                 .foregroundStyle(.secondary)

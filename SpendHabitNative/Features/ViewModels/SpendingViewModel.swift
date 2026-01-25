@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 
+@MainActor
 @Observable
 class SpendingViewModel {
     var newSpending: CreateSpendingRequest?
@@ -18,6 +19,8 @@ class SpendingViewModel {
     var responseCode : Int?
     var totalSpentByCategory: [CategorySpending] = []
     var allTimeSpent: Double = 0
+    
+    private(set) var hasLoaded = false
     
     var totalSpentMonthlyForEachCategory: [Int: Double] {
         Dictionary(grouping:
@@ -57,6 +60,8 @@ class SpendingViewModel {
     
     
     func loadSpendings(for user: User) async{
+        guard !hasLoaded else { return }
+        hasLoaded = true
         isLoading = true
         defer {
             isLoading = false
@@ -80,8 +85,9 @@ class SpendingViewModel {
         }
     }
     
-    @MainActor
+    
     func createSpending() async {
+        hasLoaded = false
         guard let newSpending = newSpending else { return }
         do{
             let endpoint = Endpoint(
@@ -160,6 +166,7 @@ class SpendingViewModel {
     }
     
     func updateSpending(id: Int, userId: Int, title: String, categoryId: Int, methodId: Int, createdDate: Date, amount: Double) async {
+        hasLoaded = false
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         
@@ -198,6 +205,74 @@ class SpendingViewModel {
             DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
             print(errorMessage ?? "No error message in spending vm")
         }
+    }
+    
+    func deleteSpending(spending: Spending) async {
+        spendings.removeAll { $0.id == spending.id }
+        hasLoaded = false
+        do{
+            let endpoint = Endpoint(
+                path: "\(APIConfig.baseURL)/spendings/deleteSpending",
+                queryItems: [URLQueryItem(name: "spendingId", value: "\(spending.id)")],
+                method: RequestMethod.post,
+                body: nil,
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                ]
+            )
+            
+            let result: ResponseModel<String?> = try await network.request(endpoint)
+            print("the code is: \(result.success)")
+            
+            responseCode = result.success
+        }
+        catch{
+            DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
+            print(errorMessage ?? "No error message in spending vm")
+        }
+    }
+    
+    var availablePastMonths: [YearMonth] = []
+
+    func buildAvailablePastMonths(for user: User) {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        print("🚀 buildAvailablePastMonths called")
+        print("Current date: \(now)")
+        print("User registered date: \(user.registeredDate)")
+
+        // Normalize date
+        let registeredDate = calendar.startOfDay(for: user.registeredDate)
+        print("Normalized registered date: \(registeredDate)")
+
+        var months: [YearMonth] = []
+
+        var year = calendar.component(.year, from: registeredDate)
+        var month = calendar.component(.month, from: registeredDate)
+        print("Start year: \(year), start month: \(month)")
+
+        let currentYear = calendar.component(.year, from: now)
+        let currentMonth = calendar.component(.month, from: now)
+        print("Current year: \(currentYear), current month: \(currentMonth)")
+
+        // Include the registration month as past month
+        while (year < currentYear) || (year == currentYear && month <= currentMonth - 1) {
+            print("Appending month: \(month)/\(year)")
+            months.append(YearMonth(year: year, month: month))
+
+            month += 1
+            if month > 12 {
+                month = 1
+                year += 1
+                print("Rolled over to next year: \(year)")
+            }
+        }
+
+        print("All months before reversing: \(months.map { $0.displayName })")
+        availablePastMonths = months.reversed()
+        print("Available past months after reversing: \(availablePastMonths.map { $0.displayName })")
     }
 
 

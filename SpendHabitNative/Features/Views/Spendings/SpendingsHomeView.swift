@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SpendingsHomeView: View {
-    @State var user: User
+    let user: User
     @State private var isVisible = false
     
     @Environment(SpendingViewModel.self) var spendingVM
@@ -29,7 +29,6 @@ struct SpendingsHomeView: View {
                         
                         NavToHistorySpendingsView(user: user)
                             .padding(.vertical, 16)
-                            
                     }
                     .padding()
                 }

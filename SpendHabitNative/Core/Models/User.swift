@@ -18,18 +18,22 @@ struct User: Codable{
     var monthsRegistered: Int {
         let calendar = Calendar.current
         let components = calendar.dateComponents(
-            [.month],
+            [.year, .month],
             from: registeredDate,
             to: Date()
         )
 
-        // At least 1 month to avoid division by zero
-        return max(components.month ?? 0, 1)
+        let years = components.year ?? 0
+        let months = components.month ?? 0
+
+        return max(years * 12 + months, 0)
     }
+
 }
 
+
 extension User {
-    static let mock = User (id: 1, username: "Nakuu", email: "notnakuusemail@gmail.com", firstName: "Angel", lastName: "Mishchanchuk", registeredDate: Date.now)
+    static let mock = User (id: 1, username: "Nakuu", email: "notnakuusemail@gmail.com", firstName: "Angel Mariano", lastName: "Mishchanchuk Dovzhytska", registeredDate: Date.now)
 }
 
 //create a struct to update

@@ -8,7 +8,7 @@
 import Foundation
 
 struct Spending: Codable, Identifiable {
-    let id: Int?
+    let id: Int
     let userId: Int
     var title: String
     var categoryId: Int

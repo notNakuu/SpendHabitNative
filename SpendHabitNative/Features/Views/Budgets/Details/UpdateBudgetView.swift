@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UpdateBudgetView: View {
     @State var budget: Budget
-    @State var user: User
+    let user: User
     @State private var stepAmount: Double = 10
     @Environment(BudgetViewModel.self) var budgetVM
     @Environment(CategoryViewModel.self) var categoryVM

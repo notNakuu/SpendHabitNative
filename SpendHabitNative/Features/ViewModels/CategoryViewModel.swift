@@ -16,7 +16,11 @@ class CategoryViewModel{
     var responseCode: Int? = nil
     var network = NetworkService()
     
+    private(set) var hasLoaded = false
+    
     func loadCategories(user: User) async {
+        guard !hasLoaded else { return }
+        hasLoaded = true
         isLoading = true
         defer { isLoading = false}
         
@@ -41,6 +45,7 @@ class CategoryViewModel{
     
     @MainActor
     func createCategory() async {
+        hasLoaded = false
         guard let category = newCategory else { return }
         do{
             let endpoint = Endpoint(
@@ -71,6 +76,7 @@ class CategoryViewModel{
     }
     
     func updateCategory(id: Int, name: String, iconKey: String, colorHex: String, isEnabled: Bool) async {
+        hasLoaded = false
         let updatedCategory: UpdateCategoryRequest = .init(name: name, iconKey: iconKey, colorHex: colorHex)
         print("Entered the function")
         

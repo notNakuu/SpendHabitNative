@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct IncomesListView: View {
-    @State var user: User
+    let user: User
     @Environment(IncomeViewModel.self) var incomeVM
     @Environment(\.colorScheme) var colorScheme
     @State private var isVisible = false
+    
+    @State private var selectedIncome: Income? = nil
     
     var body: some View {
         VStack {
@@ -29,8 +31,25 @@ struct IncomesListView: View {
                 List {
                     ForEach(groupedIncomes.keys.sorted(by: >), id: \.self) { day in
                         Section(header: Text(dayFormatted(day))) {
-                            ForEach(groupedIncomes[day] ?? [], id: \.id) { income in
+                            let incomesForTheDay = groupedIncomes[day] ?? []
+                            ForEach(incomesForTheDay, id: \.id) { income in
                                 IncomeRowView(income: income)
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        selectedIncome = income
+                                    }
+                            }
+                            .onDelete { indexSet in
+                                for index in indexSet {
+                                    let incomeToDelete = incomesForTheDay[index]
+                                    Task {
+                                        await incomeVM.deleteIncome(income: incomeToDelete)
+                                        
+                                        if incomeVM.responseCode == 1 {
+                                            await incomeVM.loadIncomes(user: user)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -38,6 +57,15 @@ struct IncomesListView: View {
                 .navigationTitle("Incomes")
                 .navigationBarTitleDisplayMode(.large)
             }
+        }
+        .sheet(item: $selectedIncome) { income in
+            EditIncomeView( user: user, income: income){
+                Task{
+                    await incomeVM.loadIncomes(user: user)
+                }
+            }
+            .background(colorScheme == .light ? .white.opacity(0.8) : .black.opacity(0.8))
+            .presentationDetents([.fraction(0.55)])
         }
     }
     

@@ -8,10 +8,55 @@
 import SwiftUI
 
 struct HistorySpendingsView: View {
-    @State var user: User
+    let user: User
+    @Environment(SpendingViewModel.self) var spendingVM
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+            NavigationStack {
+                Group {
+                    if spendingVM.availablePastMonths.isEmpty {
+                        
+                        emptyState
+                    } else {
+                        monthList
+                    }
+                }
+                .navigationTitle("Spending History")
+            }
+            .task {
+                spendingVM.buildAvailablePastMonths(for: user)
+            }
+        }
+    
+    private var emptyState: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "calendar.badge.clock")
+                .font(.system(size: 40))
+                .foregroundStyle(.secondary)
+
+            Text("No history yet")
+                .font(.headline)
+
+            Text("Come back next month to see your spending history.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding()
     }
+    
+    private var monthList: some View {
+        List {
+            ForEach(spendingVM.availablePastMonths) { month in
+                NavigationLink {
+                    PastMonthSpendingView()
+                } label: {
+                    Text(month.displayName)
+                }
+            }
+        }
+    }
+
+
 }
 
 #Preview {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NewSpendingView: View {
-    var user: User
+    let user: User
     var onAdd: (() -> Void)? = nil
     @Environment(\.dismiss) var dismiss
     
@@ -30,7 +30,7 @@ struct NewSpendingView: View {
                     TextField("Amount", value: Binding(
                         get: { spendingVM.newSpending?.amount ?? 0 },
                         set: { spendingVM.newSpending?.amount = $0 }
-                    ), format: .number)
+                    ), format: .number).keyboardType(.decimalPad)
                     
                     Picker("Payment Method", selection: Binding(
                         get: { spendingVM.newSpending?.method.id ?? 0 },

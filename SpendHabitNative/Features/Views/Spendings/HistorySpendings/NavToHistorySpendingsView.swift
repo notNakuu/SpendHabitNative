@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NavToHistorySpendingsView: View {
-    @State var user: User
+    let user: User
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {

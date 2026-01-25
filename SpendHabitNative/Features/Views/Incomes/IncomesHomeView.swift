@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct IncomesHomeView: View {
-    @State var user: User
+    let user: User
     @State private var isVisible = false
     
     @Environment(IncomeViewModel.self) var incomeVM

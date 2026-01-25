@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MyCategoriesView: View {
-    @State var user: User
+    let user: User
     @Environment(CategoryViewModel.self) var categoryVM
     @Environment(\.colorScheme) var colorScheme
 

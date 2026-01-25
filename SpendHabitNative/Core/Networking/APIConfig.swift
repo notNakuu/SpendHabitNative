@@ -8,6 +8,9 @@
 import Foundation
 
 
+// vm 162.55.221.208
+// localhost
+
 enum APIConfig{
-    static let baseURL: String = "http://192.168.0.15:8080"
+    static let baseURL: String = "http://162.55.221.208:8080"
 }
