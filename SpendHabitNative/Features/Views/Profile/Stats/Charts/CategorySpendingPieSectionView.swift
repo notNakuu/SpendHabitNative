@@ -27,40 +27,37 @@ struct CategorySpendingPieSectionView: View {
                 .frame(height: 220)
 
             // Legend
-            LazyVGrid(columns: columns, spacing: 8) {
-                ForEach(data, id: \.categoryId) { item in
+            ForEach(data, id: \.categoryId) { item in
 
-                    let category = categoryVM.categories.first { $0.id == item.categoryId }
-                    let percentage = (item.total / max(spendingVM.allTimeSpent, 0.01)) * 100
+                let category = categoryVM.categories.first { $0.id == item.categoryId }
+                let percentage = (item.total / max(spendingVM.allTimeSpent, 0.01)) * 100
 
-                    HStack(spacing: 6) {
+                HStack(spacing: 6) {
 
-                        Circle()
-                            .fill(Color(hex: category?.colorHex ?? "#9E9E9E"))
-                            .frame(width: 8, height: 8)
+                    Circle()
+                        .fill(Color(hex: category?.colorHex ?? "#9E9E9E"))
+                        .frame(width: 8, height: 8)
 
-                        Text(category?.name ?? "Unknown")
-                            .font(.subheadline)
-                            .lineLimit(1)
+                    Text(category?.name ?? "Unknown")
+                        .font(.subheadline)
+                        .lineLimit(1)
 
-                        Spacer(minLength: 4)
+                    Spacer(minLength: 4)
 
-                        Text("\(percentage, specifier: "%.1f")%")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .monospacedDigit()
-                    }
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(colorScheme == .light
-                                  ? Color.black.opacity(0.04)
-                                  : Color.white.opacity(0.06))
-                    )
+                    Text("\(percentage, specifier: "%.1f")%")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
                 }
+                .padding(.vertical, 6)
+                .padding(.horizontal, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(colorScheme == .light
+                              ? Color.black.opacity(0.04)
+                              : Color.white.opacity(0.06))
+                )
             }
-            .padding(.horizontal, 4)
         }
         .padding()
         .background(

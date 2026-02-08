@@ -38,10 +38,12 @@ struct BudgetRowView: View {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundStyle(.red)
                             .font(.caption)
+                            .frame(width: 35)
                         }
                     else{
                         Image(systemName: icon)
                             .foregroundStyle(color)
+                            .frame(width: 35)
                     }
                 }
                 VStack(alignment: .leading, spacing: 4) {

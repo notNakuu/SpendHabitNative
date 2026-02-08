@@ -37,7 +37,7 @@ struct CategoryOverviewSectionView: View {
                     .tag(1)
                     .readHeight { heights[1] = $0 }
             }
-            .tabViewStyle(.page(indexDisplayMode: .automatic))
+            .tabViewStyle(.page(indexDisplayMode: .never))
             .frame(height: heights[selection] ?? 300)
             .animation(.easeInOut(duration: 0.25), value: selection)
         }

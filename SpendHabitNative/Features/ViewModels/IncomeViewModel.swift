@@ -15,7 +15,11 @@ class IncomeViewModel{
     var isLoading: Bool = false
     var errorMessage: String?
     var responseCode: Int?
-    var allTimeIncome: Double = 0
+    var allTimeIncome: [Income] = []
+    
+    var totalAllTimeIncome: Double{
+        allTimeIncome.reduce(0){ $0 + $1.amount }
+    }
     
     private(set) var hasLoaded = false
     
@@ -32,6 +36,37 @@ class IncomeViewModel{
             incomes.reduce(0) { $0 + $1.amount }
         }
     }
+    
+    var monthlyIncomesByMonth: [(month: String, total: Double)] {
+        let calendar = Calendar.current
+
+        let grouped = Dictionary(grouping: allTimeIncome) { income in
+            let components = calendar.dateComponents([.year, .month], from: income.createdDate)
+            return components
+        }
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM yy" // Jan 26
+        formatter.locale = Locale.current
+
+        return grouped
+            .compactMap { components, spendings in
+                guard let date = calendar.date(from: components) else { return nil }
+
+                return (
+                    month: formatter.string(from: date),
+                    total: spendings.reduce(0) { $0 + $1.amount }
+                )
+            }
+            .sorted {
+                guard
+                    let d1 = formatter.date(from: $0.month),
+                    let d2 = formatter.date(from: $1.month)
+                else { return false }
+                return d1 > d2
+            }
+    }
+
     
     func loadIncomes(user: User) async{
         guard !hasLoaded else { return }
@@ -109,7 +144,7 @@ class IncomeViewModel{
                 headers: nil
             )
             
-            let result: ResponseModel<Double> = try await network.request(endpoint)
+            let result: ResponseModel<[Income]> = try await network.request(endpoint)
             
             DispatchQueue.main.async { self.allTimeIncome = result.data }
         }

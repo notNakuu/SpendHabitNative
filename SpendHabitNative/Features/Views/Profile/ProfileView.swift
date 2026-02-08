@@ -40,7 +40,7 @@ struct ProfileView: View {
        }
     
     var totalSaved: Double {
-        incomeVM.allTimeIncome - spendingVM.allTimeSpent
+        incomeVM.totalAllTimeIncome - spendingVM.allTimeSpent
     }
     
     
@@ -64,18 +64,15 @@ struct ProfileView: View {
                 
                 TransactionsView(transactions: recentTransactions)
                 
-                GeneralStatsView(user: user, totalSpent: spendingVM.allTimeSpent, totalSaved: totalSaved)
+                GeneralStatsView(user: user,totalSpent: spendingVM.allTimeSpent, totalSaved: totalSaved, totalIncome: incomeVM.totalAllTimeIncome)
                 
                 NavToMyCategoriesView(user: user)
                 
-                TotalByCategoryView(user: user)
-                
-                VStack{
-                    CategorySpendingPieSectionView(
-                        data: spendingVM.totalSpentByCategory
-                    )
-                }
-                .padding(.vertical, 20)
+                CategoryOverviewSectionView(
+                    user: user,
+                    data: spendingVM.totalSpentByCategory
+                )
+
                 
             }
             .scrollIndicators(.hidden)

@@ -26,6 +26,12 @@ struct IncomesHomeView: View {
                             .padding(.vertical, 12)
                         
                         NavToHistoryIncomesView(user: user)
+                        
+                        VStack{
+                            MonthlyIncomeChartView()
+                        }
+                        .padding(.vertical, 12)
+                        
                     }
                     .padding()
                 }
@@ -42,6 +48,9 @@ struct IncomesHomeView: View {
                         .shadow(color: .black.opacity(0.3), radius: 10)
                 }
                 .padding()
+            }
+            .task{
+                await incomeVM.loadAllTimeIncomes(user: user)
             }
             .sheet(isPresented: $isVisible) {
                 NewIncomeView(user: user) {

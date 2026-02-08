@@ -11,6 +11,10 @@ import SwiftUI
 struct SpendHabitNativeApp: App {
     @Environment(\.scenePhase) private var scenePhase
     
+    @AppStorage("lastActiveTimestamp")
+    private var lastActiveTimestamp: Double = 0
+
+    
     @State private var reloadID = UUID()
     @State private var lastBackgroundDate: Date?
     
@@ -35,28 +39,34 @@ struct SpendHabitNativeApp: App {
                     await methodVM.loadMethods()
                 }
         }
-        .onChange(of: scenePhase){ _, newPhase in
-            switch newPhase{
-            case .background:
-                lastBackgroundDate = Date()
+        .onChange(of: scenePhase) { _, newPhase in
+            switch newPhase {
             case .active:
-                if let last = lastBackgroundDate {
-                    let elapsed = Date().timeIntervalSince(last)
+                let now = Date().timeIntervalSince1970
+
+                if lastActiveTimestamp != 0 {
+                    let elapsed = now - lastActiveTimestamp
+
                     if elapsed > 15 * 60 {
                         resetApp()
                     }
                 }
+
+                lastActiveTimestamp = now
+
             default:
                 break
             }
-        
         }
+
+
+
     }
     
     private func resetApp() {
         // redo the VMs
         userVM = UserViewModel()
-        methodVM = MethodViewModel()
+        //methodVM = MethodViewModel()
         categoryVM = CategoryViewModel()
         incomeVM = IncomeViewModel()
         spendingVM = SpendingViewModel()

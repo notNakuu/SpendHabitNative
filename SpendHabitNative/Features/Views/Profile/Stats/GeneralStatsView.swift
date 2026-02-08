@@ -11,6 +11,7 @@ struct GeneralStatsView: View {
     let user: User
     let totalSpent: Double
     let totalSaved: Double
+    let totalIncome: Double
     @Environment(\.colorScheme) var colorScheme
 
     var averageSpending: Double {
@@ -33,13 +34,17 @@ struct GeneralStatsView: View {
         .padding(.vertical, 5)
         
         VStack(alignment: .leading, spacing: 12) {
-            statRow(title: "Total spent:", value: totalSpent)
+            statRow(title: "Total income:", value: totalIncome, .blue)
             Divider()
-            statRow(title: "Total saved:", value: totalSaved)
+            statRow(title: "Total spent:", value: totalSpent, .red)
+            Divider()
+            statRow(title: "Total saved:", value: totalSaved, .green)
+            /*Divider()
+            Spacer()
             Divider()
             statRow(title: "Average spent:", value: averageSpending)
             Divider()
-            statRow(title: "Average saved:", value: averageSaving)
+            statRow(title: "Average saved:", value: averageSaving)*/
         }
         .padding()
         .background(colorScheme == .light ? .white : .gray.opacity(0.2))
@@ -47,14 +52,14 @@ struct GeneralStatsView: View {
         .padding(.horizontal)
     }
 
-    private func statRow(title: String, value: Double) -> some View {
+    private func statRow(title: String, value: Double, _ color: Color) -> some View {
         HStack {
             Text(title)
                 //.font(.callout)
                 .bold()
             Spacer()
             Text("\(value.formatted()) €")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(color)
         }
         .padding(.horizontal, 10)
     }
@@ -62,5 +67,5 @@ struct GeneralStatsView: View {
 
 
 #Preview {
-    GeneralStatsView(user: User.mock, totalSpent: 1000, totalSaved: 400)
+    GeneralStatsView(user: User.mock,totalSpent: 1000, totalSaved: 1000, totalIncome: 400)
 }

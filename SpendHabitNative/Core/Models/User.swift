@@ -39,3 +39,10 @@ extension User {
 //create a struct to update
 
 //create a struct to create
+struct UserCreate: Codable{
+    var username: String
+    var email: String
+    var firstName: String
+    var lastName: String
+    var password: String
+}

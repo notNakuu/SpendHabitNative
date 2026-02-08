@@ -12,5 +12,5 @@ import Foundation
 // localhost
 
 enum APIConfig{
-    static let baseURL: String = "http://162.55.221.208:8080"
+    static let baseURL: String = "http://localhost:8080"
 }

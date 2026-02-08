@@ -50,7 +50,7 @@ struct WelcomeView: View {
                         .controlSize(.large)
 
                         NavigationLink {
-                            LoginView()
+                            RegisterView()
                         } label: {
                             Text("Register")
                                 .font(.body.weight(.semibold))
@@ -63,6 +63,7 @@ struct WelcomeView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

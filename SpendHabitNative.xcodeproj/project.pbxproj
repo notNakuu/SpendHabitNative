@@ -29,6 +29,11 @@
 			path = SpendHabitNative;
 			sourceTree = "<group>";
 		};
+		0B74069B2F37F84A00D6F474 /* Assets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Assets;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +52,7 @@
 			children = (
 				0B2C51962EE498F400507D04 /* SpendHabitNative */,
 				0B2C51952EE498F400507D04 /* Products */,
+				0B74069B2F37F84A00D6F474 /* Assets */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,6 +81,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				0B2C51962EE498F400507D04 /* SpendHabitNative */,
+				0B74069B2F37F84A00D6F474 /* Assets */,
 			);
 			name = SpendHabitNative;
 			packageProductDependencies = (
@@ -262,7 +269,7 @@
 		0B2C51A02EE498F400507D04 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = SpendHabit;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -296,7 +303,7 @@
 		0B2C51A12EE498F400507D04 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = SpendHabit;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
