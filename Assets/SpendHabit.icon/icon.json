@@ -4,28 +4,50 @@
     {
       "layers" : [
         {
-          "fill" : {
-            "solid" : "display-p3:0.40441,0.79176,1.00000,1.00000"
-          },
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "extended-srgb:0.00000,0.75294,0.90980,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "extended-srgb:0.00000,0.75294,0.90980,1.00000"
+              }
+            }
+          ],
+          "glass" : true,
           "image-name" : "Vector 3.svg",
           "name" : "Vector 3",
           "position" : {
             "scale" : 0.85,
             "translation-in-points" : [
-              205,
-              -255
+              185.73246037492663,
+              -222.03844952251376
             ]
           }
         },
         {
-          "blend-mode" : "soft-light",
-          "fill" : {
-            "solid" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
-          },
+          "blend-mode" : "normal",
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+              }
+            }
+          ],
+          "glass" : true,
           "image-name" : "Group 1.svg",
           "name" : "Group 1",
           "position" : {
-            "scale" : 0.85,
+            "scale" : 0.7,
             "translation-in-points" : [
               0,
               0
