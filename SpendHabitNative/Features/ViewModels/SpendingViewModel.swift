@@ -54,7 +54,7 @@ class SpendingViewModel {
 
         return grouped
             .map { (day: $0.key, total: $0.value.reduce(0) { $0 + $1.amount }) }
-            .sorted { $0.day < $1.day }
+            .sorted { $0.day > $1.day }
     }
 
     
@@ -72,12 +72,20 @@ class SpendingViewModel {
                 queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
                 method: RequestMethod.get,
                 body: nil,
-                headers: nil
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
             )
             
             let result: ResponseModel<[Spending]> = try await network.request(endpoint)
             
-            DispatchQueue.main.async { self.spendings = result.data }
+            if result.success == 0{
+                guard let data = result.data else { return }
+                
+                DispatchQueue.main.async { self.spendings = data }
+            }
         }
         catch{
             DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
@@ -97,7 +105,8 @@ class SpendingViewModel {
                 body: newSpending,
                 headers: [
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
                 ]
             )
             
@@ -128,12 +137,20 @@ class SpendingViewModel {
                 queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
                 method: RequestMethod.get,
                 body: nil,
-                headers: nil
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
             )
             
             let result: ResponseModel<Double> = try await network.request(endpoint)
             
-            DispatchQueue.main.async { self.allTimeSpent = result.data }
+            if result.success == 0{
+                guard let data = result.data else { return }
+                
+                DispatchQueue.main.async { self.allTimeSpent = data }
+            }
         }
         catch{
             DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
@@ -152,12 +169,20 @@ class SpendingViewModel {
                 queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
                 method: RequestMethod.get,
                 body: nil,
-                headers: nil
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
             )
             
             let result: ResponseModel<[CategorySpending]> = try await network.request(endpoint)
             
-            DispatchQueue.main.async { self.totalSpentByCategory = result.data }
+            if result.success == 0{
+                guard let data = result.data else { return }
+                
+                DispatchQueue.main.async { self.totalSpentByCategory = data}
+            }
         }
         catch{
             DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
@@ -192,7 +217,8 @@ class SpendingViewModel {
                 body: updateSpending,
                 headers: [
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
                 ]
             )
             
@@ -218,7 +244,8 @@ class SpendingViewModel {
                 body: nil,
                 headers: [
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
                 ]
             )
             

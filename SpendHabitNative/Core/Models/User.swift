@@ -46,3 +46,8 @@ struct UserCreate: Codable{
     var lastName: String
     var password: String
 }
+
+struct UserLogin: Codable{
+    var username: String
+    var password: String
+}

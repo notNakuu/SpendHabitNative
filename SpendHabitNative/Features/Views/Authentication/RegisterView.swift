@@ -129,7 +129,7 @@ struct RegisterView: View {
                             let usernameResult = await userVM.checkUsername()
 
                             guard usernameResult == .success else {
-                                usernameTaken = (usernameResult == .usernameTaken)
+                                usernameTaken = (usernameResult == .invalidInput)
                                 return
                             }
 

@@ -10,7 +10,12 @@ import Foundation
 struct ResponseModel<T: Decodable>: Decodable {
     let success: Int
     let message: String
-    let data: T
+    let data: T?
+}
+
+struct LoginResponse: Codable {
+    let token: String
+    let user: User
 }
 
 

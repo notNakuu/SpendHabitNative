@@ -25,12 +25,21 @@ class MethodViewModel{
                 queryItems: nil,
                 method: RequestMethod.get,
                 body: nil,
-                headers: nil
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
             )
             
             let result: ResponseModel<[Method]> = try await network.request(endpoint)
             
-            DispatchQueue.main.async { self.methods = result.data }
+            
+            if result.success == 0{
+                guard let data = result.data else { return }
+                
+                DispatchQueue.main.async { self.methods = data }
+            }
         }
         catch{
             DispatchQueue.main.async { self.errorMessage = error.localizedDescription }

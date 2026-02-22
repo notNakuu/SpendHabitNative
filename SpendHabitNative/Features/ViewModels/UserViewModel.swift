@@ -10,16 +10,17 @@ import Observation
 
 enum APIResult {
     case success
-    case usernameTaken
+    case invalidInput
     case invalidRequest
     case serverError
 }
 
-
+@MainActor
 @Observable
 class UserViewModel{
     var user: User?
     var newUser: UserCreate?
+    var loginUser: UserLogin?
     var isLoading = false
     var errorMessage: String? = nil
     
@@ -35,7 +36,11 @@ class UserViewModel{
                 queryItems: nil,
                 method: RequestMethod.get,
                 body: nil,
-                headers: nil
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
             )
             
             let result: ResponseModel<User> = try await network.request(endpoint)
@@ -46,6 +51,46 @@ class UserViewModel{
         catch{
             DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
             print(errorMessage ?? "No error message")
+        }
+    }
+    
+    func login() async -> APIResult {
+        do{
+            let endpoint = Endpoint(
+                path: "\(APIConfig.baseURL)/users/login",
+                queryItems: nil,
+                method: RequestMethod.post,
+                body: loginUser,
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                ]
+            )
+            
+            let result: ResponseModel<LoginResponse> = try await network.request(endpoint)
+            
+            switch result.success {
+            case 0:
+                guard let loginData = result.data else { return .serverError }
+                
+                APIToken.token = loginData.token
+                
+                self.user = loginData.user
+                
+                return .success
+            case 1:
+                return .invalidRequest
+            case 2:
+                return .invalidInput
+            default:
+                return .serverError
+            }
+            
+        }
+        catch{
+            self.errorMessage = error.localizedDescription
+            print(errorMessage ?? "No error message")
+            return .serverError
         }
     }
     
@@ -71,7 +116,7 @@ class UserViewModel{
             case 0:
                 return .success
             case 2:
-                return .usernameTaken
+                return .invalidInput
             default:
                 return .serverError
             }

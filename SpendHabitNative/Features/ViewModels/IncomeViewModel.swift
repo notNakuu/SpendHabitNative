@@ -80,12 +80,20 @@ class IncomeViewModel{
                 queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
                 method: RequestMethod.get,
                 body: nil,
-                headers: nil
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
             )
             
             let result: ResponseModel<[Income]> = try await network.request(endpoint)
             
-            DispatchQueue.main.async { self.incomes = result.data }
+            if result.success == 0{
+                guard let data = result.data else { return }
+                
+                DispatchQueue.main.async { self.incomes = data }
+            }
         }
         catch{
             if let decodingError = error as? DecodingError {
@@ -112,7 +120,8 @@ class IncomeViewModel{
                 body: newIncome,
                 headers: [
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
                 ]
             )
             
@@ -141,12 +150,20 @@ class IncomeViewModel{
                 queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
                 method: RequestMethod.get,
                 body: nil,
-                headers: nil
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
             )
             
             let result: ResponseModel<[Income]> = try await network.request(endpoint)
             
-            DispatchQueue.main.async { self.allTimeIncome = result.data }
+            if result.success == 0{
+                guard let data = result.data else { return }
+                
+                DispatchQueue.main.async { self.allTimeIncome = data }
+            }
         }
         catch{
             if let decodingError = error as? DecodingError {
@@ -169,7 +186,8 @@ class IncomeViewModel{
                 body: nil,
                 headers: [
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
                 ]
             )
             
@@ -210,7 +228,8 @@ class IncomeViewModel{
                 body: updateIncome,
                 headers: [
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
                 ]
             )
             

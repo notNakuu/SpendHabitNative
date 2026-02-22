@@ -37,15 +37,19 @@ class BudgetViewModel {
                 queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
                 method: RequestMethod.get,
                 body: nil,
-                headers: nil
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
             )
             
             let result: ResponseModel<[Budget]> = try await network.request(endpoint)
             
-            if result.success == 0 {
-                await MainActor.run {
-                    self.budgets = result.data
-                }
+            if result.success == 0{
+                guard let data = result.data else { return }
+                
+                DispatchQueue.main.async { self.budgets = data }
             }
         }
         catch{
@@ -77,7 +81,11 @@ class BudgetViewModel {
                              URLQueryItem(name: "amount", value: "\(budget.amount)")],
                 method: RequestMethod.post,
                 body: nil,
-                headers: nil
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
             )
             
             let result: ResponseModel<String?> = try await network.request(endpoint)

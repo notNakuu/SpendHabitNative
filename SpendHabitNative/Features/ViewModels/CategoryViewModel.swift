@@ -30,12 +30,20 @@ class CategoryViewModel{
                 queryItems: [URLQueryItem(name: "userId", value: "\(user.id)")],
                 method: RequestMethod.get,
                 body: nil,
-                headers: nil
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
             )
             
             let result: ResponseModel<[Category]> = try await network.request(endpoint)
             
-            DispatchQueue.main.async { self.categories = result.data }
+            if result.success == 0{
+                guard let data = result.data else { return }
+                
+                DispatchQueue.main.async { self.categories = data }
+            }
         }
         catch{
             DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
@@ -55,7 +63,8 @@ class CategoryViewModel{
                 body: category,
                 headers: [
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
                 ]
             )
             
@@ -93,7 +102,8 @@ class CategoryViewModel{
                 body: updatedCategory,
                 headers: [
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
                 ]
             )
             

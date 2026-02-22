@@ -39,7 +39,7 @@ struct WelcomeView: View {
                     // Actions
                     VStack(spacing: 16) {
                         NavigationLink {
-                            MainView()
+                            LoginView()
                         } label: {
                             Text("Log in")
                                 .font(.title3.bold())
@@ -63,7 +63,6 @@ struct WelcomeView: View {
                 }
             }
         }
-        .navigationBarBackButtonHidden(true)
     }
 }
 

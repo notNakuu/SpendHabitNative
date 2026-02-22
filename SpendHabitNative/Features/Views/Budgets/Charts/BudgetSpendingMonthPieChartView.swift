@@ -19,15 +19,23 @@ struct BudgetSpendingMonthPieChartView: View {
         GridItem(.flexible(), spacing: 16)
     ]
     
-    var moneyLeft: Double{
-        var left = budgetVM.totalToSpend - spendingVM.totalMonthlySpendings
-        
-        if left < 0{
-            left = 0
+    var difference: Double {
+        budgetVM.totalToSpend - spendingVM.totalMonthlySpendings
+    }
+
+    var didOverSpent: Bool {
+        difference < 0
+    }
+
+    var moneyLeft: Double {
+        if difference > 0 {
+            return difference
         }
-        
-        return left
-        
+        return 0
+    }
+    
+    var moneyLeftText: Double{
+        abs(difference)
     }
     
     var toSave: Double{
@@ -66,11 +74,11 @@ struct BudgetSpendingMonthPieChartView: View {
                     .frame(height: 220)
 
                     VStack(spacing: 4) {
-                        Text("Left to spend")
+                        Text(didOverSpent ? "Over spent" : "Left to spend")
                             .font(.headline.bold())
                             .foregroundStyle(.primary)
 
-                        Text("\(moneyLeft, specifier: "%.2f") €")
+                        Text("\(moneyLeftText, specifier: "%.2f") €")
                             .font(.title3.bold())
                     }
                 }

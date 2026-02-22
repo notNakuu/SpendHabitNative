@@ -13,14 +13,22 @@ struct BudgetsListView: View {
     @Environment(BudgetViewModel.self) var budgetVM
     @Environment(IncomeViewModel.self) var incomeVM
     @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(SpendingViewModel.self) var spendingVM
     @Environment(\.colorScheme) var colorScheme
 
     @State private var selectedBudget: Budget? = nil
 
     var totalToSave: Double{
         var toSave: Double = 0
-
-        toSave = incomeVM.totalMonthIncome - budgetVM.totalToSpend
+        let totalSpent = spendingVM.totalMonthlySpendings
+        let totalToSpend = budgetVM.totalToSpend
+        
+        if totalToSpend >= totalSpent {
+            toSave = incomeVM.totalMonthIncome - budgetVM.totalToSpend
+        }
+        else{
+            toSave = incomeVM.totalMonthIncome - spendingVM.totalMonthlySpendings
+        }
         if toSave < 0 {
             toSave = 0
         }

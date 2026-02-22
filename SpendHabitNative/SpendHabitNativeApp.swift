@@ -27,7 +27,7 @@ struct SpendHabitNativeApp: App {
     
     var body: some Scene {
         WindowGroup {
-            WelcomeView()
+            SplashScreenView()
                 .id(reloadID)
                 .environment(methodVM)
                 .environment(userVM)
