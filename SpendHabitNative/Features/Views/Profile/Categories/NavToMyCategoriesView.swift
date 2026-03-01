@@ -26,7 +26,7 @@ struct NavToMyCategoriesView: View {
             }
             .background(colorScheme == .light ? .white : .gray.opacity(0.2))
             .clipShape(RoundedRectangle(cornerRadius: 26))
-            .padding()
+            .padding(.horizontal, 10)
             //.padding(.vertical, 10)
         }
     }

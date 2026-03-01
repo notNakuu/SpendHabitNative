@@ -10,6 +10,9 @@ import LocalAuthentication
 
 struct SplashScreenView: View {
     @Environment(UserViewModel.self) var userVM
+    @Environment(MethodViewModel.self) var methodVM
+    @State private var hasStarted = false
+    
     @State private var isCheckingLogin = true
     @State private var navigateToMain = false
     @State private var navigateToWelcome = false
@@ -41,6 +44,8 @@ struct SplashScreenView: View {
             }
         }
         .task{
+            guard !hasStarted else { return }
+            hasStarted = true
             await startFlow()
         }
     }
@@ -80,19 +85,29 @@ struct SplashScreenView: View {
             let loginResult = await userVM.login()
             
             if loginResult == .success {
+                await waitForMethods()
                 navigateToMain = true
             }
             else{
                 navigateToWelcome = true
             }
         }
+        else{
+            navigateToWelcome = true
+        }
     }
     
     func startFlow() async {
-        // Always show splash at least 1 second
-        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        // Always show splash at least 0.5 second
+        try? await Task.sleep(nanoseconds: 500_000_000)
         
         await checkSilentLogin()
+    }
+    
+    func waitForMethods() async {
+        while methodVM.methods.isEmpty {
+            try? await Task.sleep(nanoseconds: 100_000_000) // 0.1s
+        }
     }
 }
 

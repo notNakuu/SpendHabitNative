@@ -46,9 +46,6 @@ struct MainView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .task {
-            await userVM.loadTestUser()
-        }
         .task(id: userVM.user?.id){
             guard let user = userVM.user else { return }
             

@@ -30,7 +30,7 @@ struct IncomesListView: View {
                 
                 List {
                     ForEach(groupedIncomes.keys.sorted(by: >), id: \.self) { day in
-                        Section(header: Text(dayFormatted(day))) {
+                        Section {
                             let incomesForTheDay = groupedIncomes[day] ?? []
                             ForEach(incomesForTheDay, id: \.id) { income in
                                 IncomeRowView(income: income)
@@ -50,6 +50,17 @@ struct IncomesListView: View {
                                         }
                                     }
                                 }
+                            }
+                        }header: {
+                            let incomesForTheDay = groupedIncomes[day] ?? []
+                            let totalForDay = incomesForTheDay.reduce(0) { $0 + $1.amount }
+
+                            HStack {
+                                Text(dayFormatted(day))
+                                
+                                Spacer()
+                                
+                                Text("Total \(totalForDay, specifier: "%.2f")€")
                             }
                         }
                     }

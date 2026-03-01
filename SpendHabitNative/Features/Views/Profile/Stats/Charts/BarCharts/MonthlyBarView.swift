@@ -1,34 +1,21 @@
 //
-//  SpendingVSIncomeBarChartView.swift
+//  MonthlySpendingBarView.swift
 //  SpendHabitNative
 //
-//  Created by Angel Mariano Mishchanchuk on 1/3/26.
+//  Created by Angel Mariano Mishchanchuk on 30/1/26.
 //
 
 import SwiftUI
 
-struct SpendingVSIncomeBarChartView: View {
-    let incomes: [(month: String, total: Double)]
-    let spendings: [(month: String, total: Double)]
-    
-    private var mergedData: [(month: String, income: Double, spending: Double)] {
-        incomes.map { incomeItem in
-            let spendingValue = spendings.first(where: { $0.month == incomeItem.month })?.total ?? 0
-            
-            return (
-                month: incomeItem.month,
-                income: incomeItem.total,
-                spending: spendingValue
-            )
-        }
-    }
+struct MonthlyBarView: View {
+    let data: [(month: String, total: Double)]
 
     private let chartHeight: CGFloat = 140
     private let barWidth: CGFloat = 40
     private let numberOfSteps: Int = 3
 
     private var maxValue: Double {
-        let max = mergedData.map(\.income).max() ?? 0
+        let max = data.map(\.total).max() ?? 0
         return max == 0 ? 1 : max
     }
 
@@ -73,26 +60,18 @@ struct SpendingVSIncomeBarChartView: View {
                 // 📊 BARS
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(alignment: .bottom, spacing: 12) {
-                        ForEach(mergedData, id: \.month) { item in
+                        ForEach(data, id: \.month) { item in
                             VStack(spacing: 6) {
 
-                                ZStack(alignment: .bottom) {
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .fill(Color.blue)
-                                        .frame(
-                                            width: barWidth,
-                                            height: barHeight(for: item.income)
-                                        )
+                                RoundedRectangle(cornerRadius: 6)
+                                    .fill(Color.blue)
+                                    .frame(
+                                        width: barWidth,
+                                        height: barHeight(for: item.total)
+                                    )
 
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .fill(Color.red)
-                                        .frame(
-                                            width: barWidth,
-                                            height: barHeight(for: item.spending)
-                                        )
-                                }
-
-                                Text(item.month)
+                                // Day label — now fits 2 digits
+                                Text("\(item.month)")
                                     .font(.caption2)
                                     .foregroundStyle(.secondary)
                                     .frame(width: barWidth)
@@ -114,17 +93,12 @@ struct SpendingVSIncomeBarChartView: View {
 
 #Preview {
     PreviewContainer{
-            SpendingVSIncomeBarChartView(
-                incomes: [
-                    ("Jan 26", 2000),
-                    ("Feb 26", 3100),
-                    ("Mar 26", 1200)
-                ],
-                spendings: [
-                    ("Jan 26", 1100),
-                    ("Feb 26", 1080),
-                    ("Mar 26", 300)
-                ]
-            )
+        MonthlyBarView(data: [("Jan 25", 100), ("Feb 25", 150),
+                                      ("Mar 25", 120), ("Apr 25", 180),
+                                      ("May 25", 120), ("Jun 25", 180),
+                                      ("Jul 25", 120), ("Aug 25", 180),
+                                      ("Sep 25", 120), ("Oct 25", 180),
+                                      ("Nov 25", 120), ("Dec 25", 180),
+                                      ("Jan 26", 120)])
     }
 }

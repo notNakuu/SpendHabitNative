@@ -18,7 +18,11 @@ class SpendingViewModel {
     var network = NetworkService()
     var responseCode : Int?
     var totalSpentByCategory: [CategorySpending] = []
-    var allTimeSpent: Double = 0
+    var allTimeSpendingsList: [Spending] = []
+    
+    var allTimeSpent: Double {
+        return allTimeSpendingsList.reduce(0) { $0 + $1.amount }
+    }
     
     private(set) var hasLoaded = false
     
@@ -56,6 +60,36 @@ class SpendingViewModel {
             .map { (day: $0.key, total: $0.value.reduce(0) { $0 + $1.amount }) }
             .sorted { $0.day > $1.day }
     }
+    
+    var monthlySpendingByMonth: [(month: String, total: Double)] {
+        let calendar = Calendar.current
+
+        let grouped = Dictionary(grouping: allTimeSpendingsList) { spending in
+            let components = calendar.dateComponents([.year, .month], from: spending.createdDate)
+            return components
+        }
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM yy" // Jan 26
+        formatter.locale = Locale.current
+
+        return grouped
+            .compactMap { components, spendings in
+                guard let date = calendar.date(from: components) else { return nil }
+
+                return (
+                    month: formatter.string(from: date),
+                    total: spendings.reduce(0) { $0 + $1.amount }
+                )
+            }
+            .sorted {
+                guard
+                    let d1 = formatter.date(from: $0.month),
+                    let d2 = formatter.date(from: $1.month)
+                else { return false }
+                return d1 > d2
+            }
+    }
 
     
     
@@ -84,7 +118,7 @@ class SpendingViewModel {
             if result.success == 0{
                 guard let data = result.data else { return }
                 
-                DispatchQueue.main.async { self.spendings = data }
+                self.spendings = data
             }
         }
         catch{
@@ -144,12 +178,12 @@ class SpendingViewModel {
                 ]
             )
             
-            let result: ResponseModel<Double> = try await network.request(endpoint)
+            let result: ResponseModel<[Spending]> = try await network.request(endpoint)
             
             if result.success == 0{
                 guard let data = result.data else { return }
                 
-                DispatchQueue.main.async { self.allTimeSpent = data }
+                self.allTimeSpendingsList = data
             }
         }
         catch{
@@ -181,7 +215,7 @@ class SpendingViewModel {
             if result.success == 0{
                 guard let data = result.data else { return }
                 
-                DispatchQueue.main.async { self.totalSpentByCategory = data}
+                self.totalSpentByCategory = data
             }
         }
         catch{
@@ -228,7 +262,7 @@ class SpendingViewModel {
             responseCode = result.success
         }
         catch{
-            DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
+            self.errorMessage = error.localizedDescription
             print(errorMessage ?? "No error message in spending vm")
         }
     }
@@ -255,7 +289,7 @@ class SpendingViewModel {
             responseCode = result.success
         }
         catch{
-            DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
+            self.errorMessage = error.localizedDescription
             print(errorMessage ?? "No error message in spending vm")
         }
     }

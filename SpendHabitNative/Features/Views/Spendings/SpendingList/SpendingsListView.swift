@@ -31,7 +31,7 @@ struct SpendingsListView: View {
                 List {
                     // Sort days descending (most recent first)
                     ForEach(groupedSpendings.keys.sorted(by: >), id: \.self) { day in
-                        Section(header: Text(dayFormatted(day))) {
+                        Section {
                             let spendingsForDay = groupedSpendings[day] ?? []
                             ForEach(spendingsForDay, id: \.id) { spending in
                                 SpendingRowView(spending: spending)
@@ -51,6 +51,17 @@ struct SpendingsListView: View {
                                         }
                                     }
                                 }
+                            }
+                        } header: {
+                            let spendingsForDay = groupedSpendings[day] ?? []
+                            let totalForDay = spendingsForDay.reduce(0) { $0 + $1.amount }
+
+                            HStack {
+                                Text(dayFormatted(day))
+                                
+                                Spacer()
+                                
+                                Text("Total \(totalForDay, specifier: "%.2f")€")
                             }
                         }
                     }

@@ -12,14 +12,16 @@ struct MonthlyChartView: View {
     @Environment(SpendingViewModel.self) var spendingVM
     @Environment(\.colorScheme) var colorScheme
     
-    @State private var selectedType: MonthlyChartType = .income
+    @State private var selectedType: MonthlyChartType = .combined
     
-    private var data: [(month: String, total: Double)] {
-        switch selectedType {
-        case .income:
-            return incomeVM.monthlyIncomesByMonth
-        case .spending:
-            return spendingVM.monthlySpendingByMonth
+    var headerText: String {
+        switch selectedType{
+            case .spending:
+                return "spendings"
+            case .income:
+                return "incomes"
+            case .combined:
+                return "combined"
         }
     }
     
@@ -27,7 +29,7 @@ struct MonthlyChartView: View {
         
         // Header
         HStack {
-            Text("Monthly \(selectedType.self == .income ? "Income" : "Spending")")
+            Text("Monthly \(headerText)")
                 .font(.headline)
                 .foregroundStyle(.secondary)
             
@@ -39,19 +41,61 @@ struct MonthlyChartView: View {
                 }
             }
             .pickerStyle(.menu)
-            //.frame(width: 200)
         }
         .padding(.horizontal, 20)
         
         // Card
         VStack(alignment: .leading, spacing: 12) {
-            MonthlyBarView(data: data)
+            
+            switch selectedType {
+                
+            case .income:
+                MonthlyBarView(
+                    data: incomeVM.monthlyIncomesByMonth
+                )
+                
+            case .spending:
+                MonthlyBarView(
+                    data: spendingVM.monthlySpendingByMonth
+                )
+                
+            case .combined:
+                HStack(spacing: 16) {
+                    Spacer()
+                    LegendItem(color: .blue, title: "Income")
+                    LegendItem(color: .red, title: "Spending")
+                    Spacer()
+                }
+                .padding(.horizontal, 4)
+                
+                SpendingVSIncomeBarChartView(
+                    incomes: incomeVM.monthlyIncomesByMonth,
+                    spendings: spendingVM.monthlySpendingByMonth
+                )
+            }
         }
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 26)
                 .fill(colorScheme == .light ? .white : .gray.opacity(0.2))
         )
+    }
+    
+    private struct LegendItem: View {
+        let color: Color
+        let title: String
+        
+        var body: some View {
+            HStack(spacing: 6) {
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(color)
+                    .frame(width: 12, height: 12)
+                
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
     }
 }
 

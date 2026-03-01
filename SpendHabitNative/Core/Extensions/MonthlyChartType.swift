@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+enum MonthlyChartType: String, CaseIterable, Identifiable {
+    case income = "T. Inc"
+    case combined = "T. Inc/Sp"
+    case spending = "T. Sp"
+    
+    var id: String { rawValue }
+}

@@ -66,12 +66,20 @@ struct ProfileView: View {
                 
                 GeneralStatsView(user: user,totalSpent: spendingVM.allTimeSpent, totalSaved: totalSaved, totalIncome: incomeVM.totalAllTimeIncome)
                 
+                VStack {
+                    MonthlyChartView()
+                }
+                .padding(12)
+                
                 NavToMyCategoriesView(user: user)
                 
-                CategoryOverviewSectionView(
-                    user: user,
-                    data: spendingVM.totalSpentByCategory
-                )
+                VStack{
+                    CategoryOverviewSectionView(
+                        user: user,
+                        data: spendingVM.totalSpentByCategory
+                    )
+                }
+                .padding(.vertical, 12)
 
                 
             }
