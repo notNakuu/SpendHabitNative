@@ -16,7 +16,6 @@ struct SpendHabitNativeApp: App {
 
     
     @State private var reloadID = UUID()
-    @State private var lastBackgroundDate: Date?
     
     @State var userVM = UserViewModel()
     @State var methodVM = MethodViewModel()
@@ -41,6 +40,8 @@ struct SpendHabitNativeApp: App {
         }
         .onChange(of: scenePhase) { _, newPhase in
             switch newPhase {
+            case .background:
+                    lastActiveTimestamp = Date().timeIntervalSince1970
             case .active:
                 let now = Date().timeIntervalSince1970
 

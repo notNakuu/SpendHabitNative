@@ -97,7 +97,7 @@ struct LoginView: View {
                 MainView()
                     .navigationBarBackButtonHidden(true)
             }
-            .alert("Account created", isPresented: $showAlert) {
+            .alert("Incorrect credentials", isPresented: $showAlert) {
                 Button("Continue") {
                     
                 }

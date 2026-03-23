@@ -50,49 +50,43 @@ struct SplashScreenView: View {
         }
     }
     
-    func authenticateWithFaceID() async -> Bool {
-        let context = LAContext()
-        var error: NSError?
-        
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error){
-            do{
-                return try await context.evaluatePolicy(
-                    .deviceOwnerAuthenticationWithBiometrics,
-                    localizedReason: "Authenticate to access your account"
-                )
-            }
-            catch{
-                return false
-            }
-        }
-        return false
-    }
-    
     func checkSilentLogin() async {
-        
         guard let username = KeychainManager.get(key: "username"),
               let password = KeychainManager.get(key: "password")
         else {
             navigateToWelcome = true
             return
         }
-        
-        let authenticated = await authenticateWithFaceID()
-        
-        if authenticated {
-            userVM.loginUser = UserLogin(username: username, password: password)
-            
-            let loginResult = await userVM.login()
-            
-            if loginResult == .success {
-                await waitForMethods()
-                navigateToMain = true
-            }
-            else{
-                navigateToWelcome = true
-            }
+
+        let context = LAContext()
+        var error: NSError?
+
+        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+            navigateToWelcome = true
+            return
         }
-        else{
+
+        do {
+            let authenticated = try await context.evaluatePolicy(
+                .deviceOwnerAuthenticationWithBiometrics,
+                localizedReason: "Authenticate to access your account"
+            )
+            guard authenticated else {
+                navigateToWelcome = true
+                return
+            }
+        } catch {
+            navigateToWelcome = true
+            return
+        }
+
+        userVM.loginUser = UserLogin(username: username, password: password)
+        let loginResult = await userVM.login()
+
+        if loginResult == .success {
+            await waitForMethods()
+            navigateToMain = true
+        } else {
             navigateToWelcome = true
         }
     }
