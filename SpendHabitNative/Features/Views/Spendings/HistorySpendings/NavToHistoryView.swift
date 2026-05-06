@@ -1,22 +1,22 @@
 //
-//  NewToHistoryIncomesView.swift
+//  NavToHistorySpendingsView.swift
 //  SpendHabitNative
 //
-//  Created by Angel Mariano Mishchanchuk on 29/12/25.
+//  Created by Angel Mariano Mishchanchuk on 28/12/25.
 //
 
 import SwiftUI
 
-struct NavToHistoryIncomesView: View {
+struct NavToAnalyticsView: View {
     let user: User
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         NavigationStack{
             VStack(alignment: .leading){
-                NavigationLink(destination: HistoryIncomesView(user: user)) {
+                NavigationLink(destination: HistorySpendingsListView(user: user)) {
                     HStack{
-                        Text("History of Incomes")
+                        Text("History of Spendings")
                             .font(.headline)
                         Spacer()
                         Image(systemName: "chevron.forward")
@@ -30,9 +30,10 @@ struct NavToHistoryIncomesView: View {
         }
     }
 }
+   
 
 #Preview {
     PreviewContainer{
-        NavToHistoryIncomesView(user: User.mock)
+        NavToAnalyticsView(user: User.mock)
     }
 }

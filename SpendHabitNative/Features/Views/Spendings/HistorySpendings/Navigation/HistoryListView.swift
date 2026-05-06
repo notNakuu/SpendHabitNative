@@ -7,9 +7,11 @@
 
 import SwiftUI
 
-struct HistorySpendingsView: View {
+struct HistoryListView: View {
     let user: User
-    @Environment(SpendingViewModel.self) var spendingVM
+    @Environment(AppContainers.self) var containers
+    var spendingVM: SpendingViewModel { containers.spendingVM }
+    
     var body: some View {
             NavigationStack {
                 Group {
@@ -61,6 +63,6 @@ struct HistorySpendingsView: View {
 
 #Preview {
     PreviewContainer{
-        HistorySpendingsView(user: User.mock)
+        HistoryListView(user: User.mock)
     }
 }

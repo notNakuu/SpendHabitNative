@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-struct NavToHistorySpendingsView: View {
+struct NavToHistoryView: View {
     let user: User
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         NavigationStack{
             VStack(alignment: .leading){
-                NavigationLink(destination: HistorySpendingsView(user: user)) {
+                NavigationLink(destination: HistoryListView(user: user)) {
                     HStack{
-                        Text("History of Spendings")
+                        Text("Your History")
                             .font(.headline)
                         Spacer()
                         Image(systemName: "chevron.forward")
@@ -34,6 +34,6 @@ struct NavToHistorySpendingsView: View {
 
 #Preview {
     PreviewContainer{
-        NavToHistorySpendingsView(user: User.mock)
+        NavToHistoryView(user: User.mock)
     }
 }
