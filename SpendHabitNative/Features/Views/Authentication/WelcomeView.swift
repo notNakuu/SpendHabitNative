@@ -63,6 +63,8 @@ struct WelcomeView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
+        .interactiveDismissDisabled(true)
     }
 }
 

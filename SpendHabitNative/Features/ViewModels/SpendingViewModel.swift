@@ -95,7 +95,7 @@ class SpendingViewModel {
     
     func loadSpendings(for user: User) async{
         guard !hasLoaded else { return }
-        hasLoaded = true
+        
         isLoading = true
         defer {
             isLoading = false
@@ -119,10 +119,11 @@ class SpendingViewModel {
                 guard let data = result.data else { return }
                 
                 self.spendings = data
+                hasLoaded = true
             }
         }
         catch{
-            DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
+            self.errorMessage = error.localizedDescription
             print(errorMessage ?? "No error message")
         }
     }
@@ -187,7 +188,7 @@ class SpendingViewModel {
             }
         }
         catch{
-            DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
+            self.errorMessage = error.localizedDescription
             print(errorMessage ?? "No error message")
         }
     }
@@ -219,7 +220,7 @@ class SpendingViewModel {
             }
         }
         catch{
-            DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
+            self.errorMessage = error.localizedDescription
             print(errorMessage ?? "No error message")
         }
     }
@@ -300,7 +301,6 @@ class SpendingViewModel {
         let calendar = Calendar.current
         let now = Date()
         
-        print("🚀 buildAvailablePastMonths called")
         print("Current date: \(now)")
         print("User registered date: \(user.registeredDate)")
 

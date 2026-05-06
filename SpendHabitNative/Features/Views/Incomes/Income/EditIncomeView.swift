@@ -12,9 +12,10 @@ struct EditIncomeView: View {
     @State var income: Income
     var onAdd: (() -> Void)? = nil
     
-    @Environment(IncomeViewModel.self) var incomeVM
+    @Environment(AppContainers.self) var containers
     @Environment(MethodViewModel.self) var methodVM
-    @Environment(CategoryViewModel.self) var categoryVM
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var incomeVM: IncomeViewModel { containers.incomeVM }
     @Environment(\.dismiss) var dismiss
     
     var body: some View {

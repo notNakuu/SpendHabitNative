@@ -30,17 +30,20 @@ struct TransactionRowView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(transaction.title)
                     .font(.headline)
-
+                
+                Text(transaction.date, style: .date)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            VStack(alignment: .trailing){
+                Text(formattedAmount)
+                    .font(.headline)
+                    .foregroundColor(transaction.isIncome ? .blue : .red)
                 Text(transaction.isIncome ? "Income" : "Spending")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-
-            Spacer()
-
-            Text(formattedAmount)
-                .font(.headline)
-                .foregroundColor(transaction.isIncome ? .blue : .red)
         }
         .padding(.vertical, 8)
     }

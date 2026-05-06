@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct LoginView: View {
-    @Environment(UserViewModel.self) var userVM
     @Environment(\.colorScheme) var colorScheme
     @State private var isLoggedIn = false
-    
+    @Environment(AppContainers.self) var containers
+    @Environment(MethodViewModel.self) var methodVM
+    var userVM: UserViewModel { containers.userVM}
     @State private var showAlert = false
     
     var body: some View {
@@ -63,6 +64,7 @@ struct LoginView: View {
                             let createResult = await userVM.login()
 
                             if createResult == .success {
+                                await waitForMethods()
                                 KeychainManager.save(key: "username", value: userVM.loginUser?.username ?? "")
                                 KeychainManager.save(key: "password", value: userVM.loginUser?.password ?? "")
                                 // Trigger navigation programmatically
@@ -104,6 +106,12 @@ struct LoginView: View {
             } message: {
                 Text("Invalid username or password")
             }
+        }
+    }
+    
+    func waitForMethods() async {
+        while methodVM.isLoading {
+            try? await Task.sleep(nanoseconds: 100_000_000) // 0.1s
         }
     }
 }

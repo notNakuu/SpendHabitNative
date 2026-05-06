@@ -11,8 +11,11 @@ struct UpdateBudgetView: View {
     @State var budget: Budget
     let user: User
     @State private var stepAmount: Double = 10
-    @Environment(BudgetViewModel.self) var budgetVM
-    @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(AppContainers.self) var containers
+    
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var budgetVM: BudgetViewModel { containers.budgetVM }
+    
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     

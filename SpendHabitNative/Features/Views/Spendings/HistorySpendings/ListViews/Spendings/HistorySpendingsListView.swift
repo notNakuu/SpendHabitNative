@@ -7,9 +7,11 @@
 
 import SwiftUI
 
-struct SpendingsListView: View {
+struct HistorySpendingsListView: View {
     let user: User
+    var month: YearMonth
     @Environment(AppContainers.self) var containers
+    var historyVM: HistoryViewModel { containers.historyVM }
     var spendingVM: SpendingViewModel { containers.spendingVM }
     @Environment(\.colorScheme) var colorScheme
     
@@ -17,19 +19,18 @@ struct SpendingsListView: View {
     
     var body: some View {
         VStack {
-            if spendingVM.isLoading {
+            if historyVM.isLoading {
                 Text("Loading…")
-            } else if let error = spendingVM.errorMessage {
+            } else if let error = historyVM.errorMessage {
                 Text("Error: \(error)")
             } else {
                 // Group spendings by day
-                let groupedSpendings = Dictionary(grouping: spendingVM.spendings) { spending in
+                let groupedSpendings = Dictionary(grouping: historyVM.spendings) { spending in
                     // Extract just the day/month/year part of the date
                     Calendar.current.startOfDay(for: spending.createdDate)
                 }
 
                 List {
-                    // Sort days descending (most recent first)
                     ForEach(groupedSpendings.keys.sorted(by: >), id: \.self) { day in
                         Section {
                             let spendingsForDay = groupedSpendings[day] ?? []
@@ -44,11 +45,7 @@ struct SpendingsListView: View {
                                 for index in indexSet {
                                     let spendingToDelete = spendingsForDay[index]
                                     Task {
-                                        await spendingVM.deleteSpending(spending: spendingToDelete)
-                                        
-                                        /*if spendingVM.responseCode == 0 {
-                                            await spendingVM.loadSpendings(for: user)
-                                        }*/
+                                        await historyVM.deleteHistorySpending(spending: spendingToDelete)
                                     }
                                 }
                             }
@@ -75,7 +72,7 @@ struct SpendingsListView: View {
         .sheet(item: $selectedSpending) { spending in
             EditSpendingView( user: user, spending: spending){
                 Task{
-                    await spendingVM.loadSpendings(for: user)
+                    await historyVM.loadHistory(user: user, year: month.year, month: month.month)
                 }
             }
             .background(colorScheme == .light ? .white.opacity(0.8) : .black.opacity(0.8))
@@ -95,6 +92,6 @@ struct SpendingsListView: View {
 
 #Preview {
     PreviewContainer{
-        SpendingsListView(user: User.mock)
+        HistorySpendingsListView(user: User.mock, month: YearMonth(year: 2026, month: 3))
     }
 }

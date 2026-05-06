@@ -10,12 +10,15 @@ import Observation
 
 struct MainView: View {
     @State private var isContentReady = false
+    @Environment(AppContainers.self) var containers
+    @Environment(MethodViewModel.self) var methodVM
     
-    @Environment(UserViewModel.self)var userVM
-    @Environment(CategoryViewModel.self)var categoryVM
-    @Environment(IncomeViewModel.self)var incomeVM
-    @Environment(SpendingViewModel.self)var spendingVM
-    @Environment(BudgetViewModel.self)var budgetVM
+    var userVM: UserViewModel { containers.userVM}
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var incomeVM: IncomeViewModel { containers.incomeVM }
+    var spendingVM: SpendingViewModel { containers.spendingVM }
+    var budgetVM: BudgetViewModel { containers.budgetVM }
+    
     @Environment(\.colorScheme) var colorScheme
     @State private var selectedTab: HomeTab = .spendings
     
@@ -42,6 +45,9 @@ struct MainView: View {
                     }
                     .padding(.top, height * 0.17)
                 }
+                .background(colorScheme == .light
+                            ? Color(.secondarySystemBackground)
+                            : Color(.systemBackground))
                 .ignoresSafeArea(edges: [.top, .bottom])
             }
         }

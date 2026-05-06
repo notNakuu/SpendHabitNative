@@ -9,8 +9,9 @@ import SwiftUI
 
 struct RecentSpendingsView: View {
     let user: User
-    @Environment(SpendingViewModel.self) var spendingVM
-    @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(AppContainers.self) var containers
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var spendingVM: SpendingViewModel { containers.spendingVM }
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {

@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct BudgetRowView: View {
+struct HistoryBudgetRowView: View {
     var budget: Budget
     @Environment(\.colorScheme) var colorScheme
     @Environment(AppContainers.self) var containers
     
     var categoryVM: CategoryViewModel { containers.categoryVM }
-    var spendingVM: SpendingViewModel { containers.spendingVM }
+    var historyVM: HistoryViewModel { containers.historyVM }
     
     var category: Category? {
         categoryVM.categories.first { $0.id == budget.categoryId }
@@ -27,7 +27,7 @@ struct BudgetRowView: View {
         VStack(spacing: 8) {
             let hasBudget = budget.amount > 0
             
-            let spent = spendingVM.totalSpentMonthlyForEachCategory[budget.categoryId] ?? 0
+            let spent = historyVM.totalSpentMonthlyForEachCategory[budget.categoryId] ?? 0
             let progress = hasBudget ? min(spent / budget.amount, 1) : 1
             
             let isOverBudget = hasBudget && spent > budget.amount
@@ -84,6 +84,6 @@ struct BudgetRowView: View {
 
 #Preview {
     PreviewContainer{
-        BudgetRowView(budget: Budget.mock)
+        HistoryBudgetRowView(budget: Budget.mock)
     }
 }

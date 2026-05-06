@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct DailySpendingChartSectionView: View {
-    @Environment(SpendingViewModel.self) var spendingVM
     @Environment(\.colorScheme) var colorScheme
+    @Environment(AppContainers.self) var containers
+    
+    var spendingVM: SpendingViewModel { containers.spendingVM }
 
     var body: some View {
 

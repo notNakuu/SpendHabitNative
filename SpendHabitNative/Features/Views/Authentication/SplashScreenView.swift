@@ -9,8 +9,10 @@ import SwiftUI
 import LocalAuthentication
 
 struct SplashScreenView: View {
-    @Environment(UserViewModel.self) var userVM
+    @Environment(AppContainers.self) var containers
     @Environment(MethodViewModel.self) var methodVM
+    
+    var userVM: UserViewModel { containers.userVM}
     @State private var hasStarted = false
     
     @State private var isCheckingLogin = true
@@ -92,14 +94,14 @@ struct SplashScreenView: View {
     }
     
     func startFlow() async {
-        // Always show splash at least 0.5 second
-        try? await Task.sleep(nanoseconds: 500_000_000)
+        // Always show splash at least 0.25 second
+        try? await Task.sleep(nanoseconds: 250_000_000)
         
         await checkSilentLogin()
     }
     
     func waitForMethods() async {
-        while methodVM.methods.isEmpty {
+        while methodVM.isLoading {
             try? await Task.sleep(nanoseconds: 100_000_000) // 0.1s
         }
     }

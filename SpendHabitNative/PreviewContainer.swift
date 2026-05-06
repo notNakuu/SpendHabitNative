@@ -19,13 +19,6 @@ struct PreviewContainer<Content: View>: View {
     }
 
     // MARK: - Mock VMs
-
-    private let userVM: UserViewModel = {
-        let vm = UserViewModel()
-        vm.user = User.mock
-        return vm
-    }()
-
     private let methodVM: MethodViewModel = {
         let vm = MethodViewModel()
         vm.methods = [
@@ -34,12 +27,16 @@ struct PreviewContainer<Content: View>: View {
             Method(id: 3, iconKey: "phone.fill", name: "Bizum"),
             Method(id: 4, iconKey: "building.columns.fill", name: "Transfer")
         ]
-        return vm
-    }()
+        return vm }()
 
-    private let categoryVM: CategoryViewModel = {
-        let vm = CategoryViewModel()
-        vm.categories = [
+    private let containers: AppContainers = {
+        let c = AppContainers()
+        
+        // User
+        c.userVM.user = User.mock
+        
+        // Categories
+        c.categoryVM.categories = [
             Category(id: 15, iconKey: "cart.fill", colorHex: "#FF5733", name: "Food", isEnabled: true),
             Category(id: 16, iconKey: "house.fill", colorHex: "#33FF57", name: "Home", isEnabled: true),
             Category(id: 17, iconKey: "car.fill", colorHex: "#3357FF", name: "Transport", isEnabled: true),
@@ -48,26 +45,20 @@ struct PreviewContainer<Content: View>: View {
             Category(id: 20, iconKey: "creditcard.fill", colorHex: "#DAF7A6", name: "Bills", isEnabled: true),
             Category(id: 21, iconKey: "gift.fill", colorHex: "#FF5733", name: "Entertainment", isEnabled: true)
         ]
-        return vm
-    }()
-
-    private let incomeVM: IncomeViewModel = {
-        let vm = IncomeViewModel()
-        vm.incomes = [
+        
+        // Income
+        c.incomeVM.incomes = [
             Income(id: 1, userId: 1, title: "Salary", methodId: 4, createdDate: Date(), amount: 2000),
             Income(id: 2, userId: 1, title: "Freelance", methodId: 3, createdDate: Date(), amount: 500)
         ]
-        return vm
-    }()
-
-    private let spendingVM: SpendingViewModel = {
-        let vm = SpendingViewModel()
-        vm.spendings = [
+        
+        // Spending
+        c.spendingVM.spendings = [
             Spending(id: 1, userId: 1, title: "Subscriptions", categoryId: 20, methodId: 2, createdDate: Date(), amount: 30),
             Spending(id: 2, userId: 1, title: "Diesel 46L", categoryId: 17, methodId: 2, createdDate: Date(), amount: 68)
         ]
         
-        vm.totalSpentByCategory = [
+        c.spendingVM.totalSpentByCategory = [
             CategorySpending(categoryId: 15, total: 100),
             CategorySpending(categoryId: 16, total: 50),
             CategorySpending(categoryId: 17, total: 150),
@@ -75,38 +66,21 @@ struct PreviewContainer<Content: View>: View {
             CategorySpending(categoryId: 19, total: 0),
             CategorySpending(categoryId: 20, total: 10)
         ]
-        return vm
-    }()
-    
-    private let budgetVM: BudgetViewModel = {
-        let vm = BudgetViewModel()
-        vm.budgets = [
-            Budget(
-                id: 1,
-                categoryId: 15, // Food
-                createdDate: Date(),
-                amount: 300
-            ),
-            Budget(
-                id: 2,
-                categoryId: 16, // Home
-                createdDate: Date(),
-                amount: 200
-            ),
-            Budget(
-                id: 3,
-                categoryId: 17, // Transport
-                createdDate: Date(),
-                amount: 150
-            ),
-            Budget(
-                id: 4,
-                categoryId: 18, // Health
-                createdDate: Date(),
-                amount: 150
-            )
+        
+        // Budget
+        c.budgetVM.budgets = [
+            Budget(id: 1, categoryId: 15, createdDate: Date(), amount: 300),
+            Budget(id: 2, categoryId: 16, createdDate: Date(), amount: 200),
+            Budget(id: 3, categoryId: 17, createdDate: Date(), amount: 150),
+            Budget(id: 4, categoryId: 18, createdDate: Date(), amount: 150)
         ]
-        return vm
+        
+        //History
+        c.historyVM.budgets = c.budgetVM.budgets
+        c.historyVM.incomes = c.incomeVM.incomes
+        c.historyVM.spendings = c.spendingVM.spendings
+        
+        return c
     }()
 
 
@@ -114,11 +88,7 @@ struct PreviewContainer<Content: View>: View {
 
     var body: some View {
         content
-            .environment(userVM)
+            .environment(containers)
             .environment(methodVM)
-            .environment(categoryVM)
-            .environment(incomeVM)
-            .environment(spendingVM)
-            .environment(budgetVM)
     }
 }

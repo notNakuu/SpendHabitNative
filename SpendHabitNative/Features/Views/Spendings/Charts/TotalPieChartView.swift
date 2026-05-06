@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct TotalPieChartView: View {
-    @Environment(SpendingViewModel.self) var spendingVM
-    @Environment(CategoryViewModel.self) var categoryVM
     @Environment(\.colorScheme) var colorScheme
+    @Environment(AppContainers.self) var containers
+    
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var spendingVM: SpendingViewModel { containers.spendingVM }
     
     @State private var showLegend = false
     
@@ -27,9 +29,11 @@ struct TotalPieChartView: View {
                     showLegend.toggle()
                 }
             } label: {
-                Image(systemName: showLegend ? "list.bullet" : "list.bullet.rectangle")
+                Text(showLegend ? "Hide legend" : "Show legend")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(.secondary)
+                    //.foregroundStyle(.secondary)
+                
+                
             }
         }
         .padding(.horizontal, 20)

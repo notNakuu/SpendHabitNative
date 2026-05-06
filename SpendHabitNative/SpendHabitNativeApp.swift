@@ -13,27 +13,17 @@ struct SpendHabitNativeApp: App {
     
     @AppStorage("lastActiveTimestamp")
     private var lastActiveTimestamp: Double = 0
+    @State var reloadID = UUID()
 
-    
-    @State private var reloadID = UUID()
-    
-    @State var userVM = UserViewModel()
     @State var methodVM = MethodViewModel()
-    @State var categoryVM = CategoryViewModel()
-    @State var incomeVM = IncomeViewModel()
-    @State var spendingVM = SpendingViewModel()
-    @State var budgetVM = BudgetViewModel()
+    @State var appContainers = AppContainers()
     
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
                 .id(reloadID)
                 .environment(methodVM)
-                .environment(userVM)
-                .environment(categoryVM)
-                .environment(incomeVM)
-                .environment(spendingVM)
-                .environment(budgetVM)
+                .environment(appContainers)
                 .task {
                     await methodVM.loadMethods()
                 }
@@ -48,8 +38,8 @@ struct SpendHabitNativeApp: App {
                 if lastActiveTimestamp != 0 {
                     let elapsed = now - lastActiveTimestamp
 
-                    if elapsed > 15 * 60 {
-                        resetApp()
+                    if elapsed > 10 * 60 {
+                        resetView()
                     }
                 }
 
@@ -59,22 +49,10 @@ struct SpendHabitNativeApp: App {
                 break
             }
         }
-
-
-
     }
     
-    private func resetApp() {
-        // redo the VMs
-        userVM = UserViewModel()
-        //methodVM = MethodViewModel()
-        categoryVM = CategoryViewModel()
-        incomeVM = IncomeViewModel()
-        spendingVM = SpendingViewModel()
-        budgetVM = BudgetViewModel()
-
-        // rebuild the UI
+    func resetView(){
+        appContainers.resetApp()
         reloadID = UUID()
     }
-    
 }

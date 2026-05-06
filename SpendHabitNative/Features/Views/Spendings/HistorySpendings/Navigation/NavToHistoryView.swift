@@ -16,7 +16,7 @@ struct NavToHistoryView: View {
             VStack(alignment: .leading){
                 NavigationLink(destination: HistoryListView(user: user)) {
                     HStack{
-                        Text("Your History")
+                        Text("Monthly Overview")
                             .font(.headline)
                         Spacer()
                         Image(systemName: "chevron.forward")

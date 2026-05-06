@@ -11,8 +11,9 @@ struct NewIncomeView: View {
     let user: User
     var onAdd: (() -> Void)? = nil
     
-    @Environment(IncomeViewModel.self) var incomeVM
+    @Environment(AppContainers.self) var containers
     @Environment(MethodViewModel.self) var methodVM
+    var incomeVM: IncomeViewModel { containers.incomeVM }
     @Environment(\.dismiss) var dismiss
     
     var body: some View {

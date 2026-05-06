@@ -9,9 +9,11 @@ import SwiftUI
 
 struct BudgetRowView: View {
     var budget: Budget
-    @Environment(CategoryViewModel.self) var categoryVM
     @Environment(\.colorScheme) var colorScheme
-    @Environment(SpendingViewModel.self) var spendingVM
+    @Environment(AppContainers.self) var containers
+    
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var spendingVM: SpendingViewModel { containers.spendingVM }
     
     var category: Category? {
         categoryVM.categories.first { $0.id == budget.categoryId }

@@ -9,14 +9,18 @@ import SwiftUI
 
 struct ProfileView: View {
     let user: User
-    @Environment(UserViewModel.self) var userVM
-    @Environment(CategoryViewModel.self) var categoryVM
-    @Environment(IncomeViewModel.self) var incomeVM
-    @Environment(SpendingViewModel.self) var spendingVM
-    @Environment(BudgetViewModel.self) var budgetVM
+    @Environment(AppContainers.self) var containers
     @Environment(MethodViewModel.self) var methodVM
     
+    var userVM: UserViewModel { containers.userVM}
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var incomeVM: IncomeViewModel { containers.incomeVM }
+    var spendingVM: SpendingViewModel { containers.spendingVM }
+    var budgetVM: BudgetViewModel { containers.budgetVM }
+    
     @Environment(\.colorScheme) var colorScheme
+    
+    @State private var navigateToWelcome = false
     
     var recentTransactions: [Transaction] {
            let spendings = spendingVM.spendings.map {
@@ -87,17 +91,40 @@ struct ProfileView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    VStack {
-                        Button{
-                                    
-                        }label:{
-                            Image(systemName: "gearshape.fill")
+                    NavigationStack{
+                        VStack {
+                            Menu{
+                                NavigationLink(destination: UserInfoView()) {
+                                    HStack{
+                                        Text("Edit User Info")
+                                            .font(.headline)
+                                        Spacer()
+                                        Image(systemName: "chevron.forward")
+                                    }
+                                }
+                                Divider()
+                                Button("Change Username"){ print("Test") }
+                                Button("Change email"){ print("Test") }
+                                Button("Change password"){ print("Test") }
+                                Divider()
+                                Button(role: .destructive){
+                                    containers.resetApp()
+                                    navigateToWelcome = true
+                                } label: {
+                                    Label("Logout", systemImage: "person.crop.circle")
+                                }
+                            }label:{
+                                Image(systemName: "gearshape.fill")
+                            }
                         }
                     }
                 }
             }
             .navigationTitle("\(user.firstName)")
             .background(colorScheme == .light ? .black.opacity(0.03) : .black)
+            .navigationDestination(isPresented: $navigateToWelcome){
+                WelcomeView()
+            }
             
         }
         .task{

@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct TotalByCategoryRowView: View {
-    @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(AppContainers.self) var containers
+    
+    var categoryVM: CategoryViewModel { containers.categoryVM }
     var cs: CategorySpending
     
     var category: Category? {

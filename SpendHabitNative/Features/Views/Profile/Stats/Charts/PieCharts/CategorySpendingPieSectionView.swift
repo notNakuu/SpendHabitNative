@@ -14,10 +14,13 @@ struct CategorySpendingPieSectionView: View {
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12)
     ]
-
-    @Environment(CategoryViewModel.self) var categoryVM
-    @Environment(SpendingViewModel.self) var spendingVM
     @Environment(\.colorScheme) var colorScheme
+    
+    @Environment(AppContainers.self) var containers
+
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var spendingVM: SpendingViewModel { containers.spendingVM }
+    
 
     var body: some View {
         VStack(spacing: 16) {

@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct MonthlyIncomesPieChartView: View {
-    @Environment(IncomeViewModel.self) var incomeVM
-    @Environment(MethodViewModel.self) var methodVM
     @Environment(\.colorScheme) var colorScheme
+    @Environment(AppContainers.self) var containers
+    @Environment(MethodViewModel.self) var methodVM
+    var incomeVM: IncomeViewModel { containers.incomeVM }
     
     let columns = [
         GridItem(.flexible(), spacing: 16),

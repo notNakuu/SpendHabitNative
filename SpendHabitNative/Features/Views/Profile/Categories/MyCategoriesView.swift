@@ -9,8 +9,10 @@ import SwiftUI
 
 struct MyCategoriesView: View {
     let user: User
-    @Environment(CategoryViewModel.self) var categoryVM
     @Environment(\.colorScheme) var colorScheme
+    @Environment(AppContainers.self) var containers
+    
+    var categoryVM: CategoryViewModel { containers.categoryVM }
 
     @State private var selectedCategory: Category? = nil
     @State private var showCreateCategory = false

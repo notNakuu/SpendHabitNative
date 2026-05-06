@@ -9,8 +9,10 @@ import SwiftUI
 
 struct RecentIncomesView: View {
     let user: User
-    @Environment(IncomeViewModel.self) var incomeVM
+    @Environment(AppContainers.self) var containers
     @Environment(MethodViewModel.self) var methodVM
+    var incomeVM: IncomeViewModel { containers.incomeVM }
+
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {

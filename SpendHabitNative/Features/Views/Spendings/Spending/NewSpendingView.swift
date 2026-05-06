@@ -11,11 +11,11 @@ struct NewSpendingView: View {
     let user: User
     var onAdd: (() -> Void)? = nil
     @Environment(\.dismiss) var dismiss
-    
-    @Environment(SpendingViewModel.self) var spendingVM
     @Environment(MethodViewModel.self) var methodVM
-    @Environment(CategoryViewModel.self) var categoryVM
-    @Environment(BudgetViewModel.self) var budgetVM
+    @Environment(AppContainers.self) var containers
+    
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var spendingVM: SpendingViewModel { containers.spendingVM }
     
     var body: some View {
         NavigationView{

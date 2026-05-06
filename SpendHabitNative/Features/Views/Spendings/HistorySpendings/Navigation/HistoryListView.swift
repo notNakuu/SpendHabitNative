@@ -22,7 +22,7 @@ struct HistoryListView: View {
                         monthList
                     }
                 }
-                .navigationTitle("Spending History")
+                .navigationTitle("Your Months Overview")
             }
             .task {
                 spendingVM.buildAvailablePastMonths(for: user)
@@ -50,7 +50,7 @@ struct HistoryListView: View {
         List {
             ForEach(spendingVM.availablePastMonths) { month in
                 NavigationLink {
-                    PastMonthSpendingView()
+                    HistoryView(user: user, month: month)
                 } label: {
                     Text(month.displayName)
                 }

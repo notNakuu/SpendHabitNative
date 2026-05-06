@@ -9,7 +9,9 @@ import SwiftUI
 
 struct IncomesListView: View {
     let user: User
-    @Environment(IncomeViewModel.self) var incomeVM
+    @Environment(AppContainers.self) var containers
+    var incomeVM: IncomeViewModel { containers.incomeVM }
+
     @Environment(\.colorScheme) var colorScheme
     @State private var isVisible = false
     
@@ -45,9 +47,10 @@ struct IncomesListView: View {
                                     Task {
                                         await incomeVM.deleteIncome(income: incomeToDelete)
                                         
-                                        if incomeVM.responseCode == 1 {
+                                        /*if incomeVM.responseCode == 0 {
+                                            print("Im here now")
                                             await incomeVM.loadIncomes(user: user)
-                                        }
+                                        }*/
                                     }
                                 }
                             }

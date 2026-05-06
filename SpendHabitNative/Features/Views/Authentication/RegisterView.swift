@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct RegisterView: View {
-    @Environment(UserViewModel.self) var userVM
+    @Environment(AppContainers.self) var containers
+    var userVM: UserViewModel { containers.userVM}
     @Environment(\.colorScheme) var colorScheme
     @State private var confirmPassword = ""
     @State private var usernameTaken = false

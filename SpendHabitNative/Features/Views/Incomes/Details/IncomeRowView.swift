@@ -9,9 +9,11 @@ import SwiftUI
 
 struct IncomeRowView: View {
     var income: Income
-    @Environment(MethodViewModel.self) var methodVM
     @Environment(\.colorScheme) var colorScheme
-    @Environment(IncomeViewModel.self) var incomeVM
+    @Environment(AppContainers.self) var containers
+    @Environment(MethodViewModel.self) var methodVM
+
+    var incomeVM: IncomeViewModel { containers.incomeVM }
     
     var method: Method? {
         methodVM.methods.first { $0.id == income.methodId }

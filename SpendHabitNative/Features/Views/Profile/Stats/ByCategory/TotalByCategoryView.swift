@@ -9,7 +9,9 @@ import SwiftUI
 
 struct TotalByCategoryView: View {
     let user: User
-    @Environment(SpendingViewModel.self) var spendingVM
+    @Environment(AppContainers.self) var containers
+
+    var spendingVM: SpendingViewModel { containers.spendingVM }
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {

@@ -10,9 +10,10 @@ import SwiftUI
 struct SpendingsHomeView: View {
     let user: User
     @State private var isVisible = false
-    
-    @Environment(SpendingViewModel.self) var spendingVM
-    @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(AppContainers.self) var containers
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var spendingVM: SpendingViewModel { containers.spendingVM }
+
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
@@ -27,7 +28,7 @@ struct SpendingsHomeView: View {
                         
                         DailySpendingChartSectionView()
                         
-                        NavToHistorySpendingsView(user: user)
+                        NavToHistoryView(user: user)
                             .padding(.vertical, 16)
                     }
                     .padding()

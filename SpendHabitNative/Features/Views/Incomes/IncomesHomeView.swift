@@ -10,9 +10,9 @@ import SwiftUI
 struct IncomesHomeView: View {
     let user: User
     @State private var isVisible = false
-    
-    @Environment(IncomeViewModel.self) var incomeVM
+    @Environment(AppContainers.self) var containers
     @Environment(MethodViewModel.self) var methodVM
+    var incomeVM: IncomeViewModel { containers.incomeVM }
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
@@ -25,7 +25,6 @@ struct IncomesHomeView: View {
                         RecentIncomesView(user: user)
                             .padding(.vertical, 12)
                         
-                        NavToHistoryIncomesView(user: user)
                         
                     }
                     .padding()

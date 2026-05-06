@@ -8,24 +8,20 @@
 import SwiftUI
 
 struct HistoryIncomesListView: View {
-    let user: User
     @Environment(AppContainers.self) var containers
-    var incomeVM: IncomeViewModel { containers.incomeVM }
+    var historyVM: HistoryViewModel { containers.historyVM }
 
     @Environment(\.colorScheme) var colorScheme
-    @State private var isVisible = false
-    
-    @State private var selectedIncome: Income? = nil
     
     var body: some View {
         VStack {
-            if incomeVM.isLoading {
+            if historyVM.isLoading {
                 Text("Loading…")
-            } else if let error = incomeVM.errorMessage {
+            } else if let error = historyVM.errorMessage {
                 Text("Error: \(error)")
             } else {
                 // Group spendings by day
-                let groupedIncomes = Dictionary(grouping: incomeVM.incomes) { income in
+                let groupedIncomes = Dictionary(grouping: historyVM.incomes) { income in
                     // Extract just the day/month/year part of the date
                     Calendar.current.startOfDay(for: income.createdDate)
                 }
@@ -37,21 +33,6 @@ struct HistoryIncomesListView: View {
                             ForEach(incomesForTheDay, id: \.id) { income in
                                 IncomeRowView(income: income)
                                     .contentShape(Rectangle())
-                                    .onTapGesture {
-                                        selectedIncome = income
-                                    }
-                            }
-                            .onDelete { indexSet in
-                                for index in indexSet {
-                                    let incomeToDelete = incomesForTheDay[index]
-                                    Task {
-                                        await incomeVM.deleteIncome(income: incomeToDelete)
-                                        
-                                        if incomeVM.responseCode == 1 {
-                                            await incomeVM.loadIncomes(user: user)
-                                        }
-                                    }
-                                }
                             }
                         }header: {
                             let incomesForTheDay = groupedIncomes[day] ?? []
@@ -71,15 +52,6 @@ struct HistoryIncomesListView: View {
                 .navigationBarTitleDisplayMode(.large)
             }
         }
-        .sheet(item: $selectedIncome) { income in
-            EditIncomeView( user: user, income: income){
-                Task{
-                    await incomeVM.loadIncomes(user: user)
-                }
-            }
-            .background(colorScheme == .light ? .white.opacity(0.8) : .black.opacity(0.8))
-            .presentationDetents([.fraction(0.55)])
-        }
     }
     
     // Helper function to format the date for the section header
@@ -93,7 +65,7 @@ struct HistoryIncomesListView: View {
 
 #Preview {
     PreviewContainer{
-        IncomesListView(user: User.mock)
+        HistoryIncomesListView()
     }
 }
 

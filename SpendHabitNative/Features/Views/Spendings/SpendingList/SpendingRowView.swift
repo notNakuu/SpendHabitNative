@@ -7,35 +7,37 @@
 
 import SwiftUI
 
-struct SpendingRowView: View {
-    var spending: Spending
-    @Environment(CategoryViewModel.self) var categoryVM
-    @Environment(\.colorScheme) var colorScheme
-    @Environment(SpendingViewModel.self) var spendingVM
-    
-    var category: Category? {
-        categoryVM.categories.first { $0.id == spending.categoryId }
-    }
+    struct SpendingRowView: View {
+        var spending: Spending
+        @Environment(\.colorScheme) var colorScheme
+        @Environment(AppContainers.self) var containers
+        
+        var categoryVM: CategoryViewModel { containers.categoryVM }
+        var spendingVM: SpendingViewModel { containers.spendingVM }
+        
+        var category: Category? {
+            categoryVM.categories.first { $0.id == spending.categoryId }
+        }
 
-    var color: Color {
-        Color(hex: category?.colorHex ?? "#000000")
-    }
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            if let icon = category?.iconKey {
-                Image(systemName: icon)
-                    .foregroundStyle(color)
+        var color: Color {
+            Color(hex: category?.colorHex ?? "#000000")
+        }
+        
+        var body: some View {
+            HStack(spacing: 12) {
+                if let icon = category?.iconKey {
+                    Image(systemName: icon)
+                        .foregroundStyle(color)
+                }
+                Text(spending.title)
+                    .font(.headline)
+                Spacer()
+                Text("\(spending.amount, specifier: "%.2f") €")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
             }
-            Text(spending.title)
-                .font(.headline)
-            Spacer()
-            Text("\(spending.amount, specifier: "%.2f") €")
-                .font(.headline)
-                .foregroundStyle(.secondary)
         }
     }
-}
 
 #Preview {
     PreviewContainer{

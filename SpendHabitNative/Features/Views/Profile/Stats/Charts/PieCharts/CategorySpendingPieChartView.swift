@@ -9,8 +9,11 @@ import SwiftUI
 
 struct CategorySpendingPieChartView: View {
     let data: [CategorySpending]
-    @Environment(CategoryViewModel.self) var categoryVM
+    
+    @Environment(AppContainers.self) var containers
 
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    
     var total: Double {
         data.reduce(0) { $0 + $1.total }
     }

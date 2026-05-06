@@ -9,11 +9,14 @@ import SwiftUI
 
 struct BudgetsListView: View {
     let user: User
-
-    @Environment(BudgetViewModel.self) var budgetVM
-    @Environment(IncomeViewModel.self) var incomeVM
-    @Environment(CategoryViewModel.self) var categoryVM
-    @Environment(SpendingViewModel.self) var spendingVM
+    @Environment(AppContainers.self) var containers
+    @Environment(MethodViewModel.self) var methodVM
+    
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var incomeVM: IncomeViewModel { containers.incomeVM }
+    var spendingVM: SpendingViewModel { containers.spendingVM }
+    var budgetVM: BudgetViewModel { containers.budgetVM }
+    
     @Environment(\.colorScheme) var colorScheme
 
     @State private var selectedBudget: Budget? = nil

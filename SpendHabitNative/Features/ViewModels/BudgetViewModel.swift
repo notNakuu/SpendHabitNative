@@ -18,6 +18,10 @@ class BudgetViewModel {
     
     private(set) var hasLoaded = false
     
+    func resetLoad(){
+        hasLoaded = false
+    }
+    
     var totalToSpend: Double {
         budgets.reduce(0){ $0 + $1.amount }
     }

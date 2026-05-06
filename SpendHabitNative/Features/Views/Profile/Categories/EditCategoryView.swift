@@ -13,8 +13,10 @@ struct EditCategoryView: View {
     @State private var selectedColor: Color
 
     let user: User
+    @Environment(AppContainers.self) var containers
     
-    @Environment(CategoryViewModel.self) var categoryVM
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     

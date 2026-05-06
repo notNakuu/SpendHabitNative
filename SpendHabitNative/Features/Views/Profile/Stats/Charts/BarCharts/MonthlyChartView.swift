@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct MonthlyChartView: View {
-    @Environment(IncomeViewModel.self) var incomeVM
-    @Environment(SpendingViewModel.self) var spendingVM
     @Environment(\.colorScheme) var colorScheme
+    @Environment(AppContainers.self) var containers
+    
+    var incomeVM: IncomeViewModel { containers.incomeVM }
+    var spendingVM: SpendingViewModel { containers.spendingVM }
     
     @State private var selectedType: MonthlyChartType = .combined
     
@@ -43,6 +45,7 @@ struct MonthlyChartView: View {
             .pickerStyle(.menu)
         }
         .padding(.horizontal, 20)
+        .padding(.vertical, -3)
         
         // Card
         VStack(alignment: .leading, spacing: 12) {

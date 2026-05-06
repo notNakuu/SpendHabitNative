@@ -14,7 +14,10 @@ struct NewCategoryView: View {
     let user: User
     var onAdd: (() -> Void)? = nil
     
-    @Environment(CategoryViewModel.self) var categoryVM
+    @Environment(AppContainers.self) var containers
+    
+    var categoryVM: CategoryViewModel { containers.categoryVM }
+    var budgetVM: BudgetViewModel { containers.budgetVM }
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     
@@ -100,7 +103,7 @@ struct NewCategoryView: View {
                             showDuplicateAlert = true
                         } else {
                             Task {
-                                await categoryVM.createCategory()
+                                await categoryVM.createCategory(budgetVM: budgetVM)
                                 if categoryVM.responseCode == 0 {
                                     onAdd?()
                                     dismiss()

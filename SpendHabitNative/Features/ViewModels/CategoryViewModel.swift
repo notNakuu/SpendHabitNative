@@ -52,7 +52,7 @@ class CategoryViewModel{
     }
     
     @MainActor
-    func createCategory() async {
+    func createCategory(budgetVM: BudgetViewModel) async {
         hasLoaded = false
         guard let category = newCategory else { return }
         do{
@@ -71,6 +71,10 @@ class CategoryViewModel{
             let result: ResponseModel<String?> = try await network.request(endpoint)
             
             self.responseCode = result.success
+            if responseCode == 0 {
+                hasLoaded = false
+                budgetVM.resetLoad()
+            }
             self.newCategory = nil
         }
         catch{

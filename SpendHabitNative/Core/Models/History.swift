@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct History: Codable {
+    let spendings: [Spending]
+    let incomes: [Income]
+    let budgets: [Budget]
+}

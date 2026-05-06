@@ -74,6 +74,7 @@ class UserViewModel{
                 guard let loginData = result.data else { return .serverError }
                 
                 APIToken.token = loginData.token
+                APIToken.expiresAt = Date().addingTimeInterval(1500) // Expires at 30 mins after token creating minus 5 min buffer -> 25 min
                 
                 self.user = loginData.user
                 
