@@ -78,6 +78,10 @@ class UserViewModel{
                 
                 self.user = loginData.user
                 
+                if let u = self.user{
+                    print(u.email)
+                }
+                
                 return .success
             case 1:
                 return .invalidRequest
@@ -95,7 +99,7 @@ class UserViewModel{
         }
     }
     
-    @MainActor
+    
     func checkUsername() async -> APIResult {
         isLoading = true
         defer { isLoading = false }
@@ -129,7 +133,7 @@ class UserViewModel{
     }
 
     
-    @MainActor
+    
     func createUser() async -> APIResult {
         isLoading = true
         defer { isLoading = false }
@@ -154,6 +158,56 @@ class UserViewModel{
             errorMessage = error.localizedDescription
             return .serverError
         }
+    }
+    
+    func sendVerificationCode(userEmail: String) async -> Int {
+        do{
+            let endpoint = Endpoint(
+                path: "\(APIConfig.baseURL)/reset/generateToken",
+                queryItems: nil,
+                method: .post,
+                body: ResetTokenRequest(userEmail: userEmail),
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                ]
+            )
+            
+            //print(endpoint.body)
+            
+            let result: ResponseModel<String?> = try await network.request(endpoint)
+            self.errorMessage = result.message
+            return result.success
+        }
+        catch {
+            errorMessage = error.localizedDescription
+            return 10
+        }
+    }
+    
+    func resetPassword(userEmail: String, token: String, newPassword: String) async -> Int {
+        //print(" in resetPassword: \(userEmail), \(token), \(newPassword)")
+        do{
+            let endpoint = Endpoint(
+                path: "\(APIConfig.baseURL)/reset/resetPasswd",
+                queryItems: nil,
+                method: .post,
+                body: NewPasswordModel(userEmail: userEmail, token: token, newPassword: newPassword),
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                ]
+            )
+            let result: ResponseModel<String?> = try await network.request(endpoint)
+            self.errorMessage = result.message
+            return result.success
+            
+        }
+        catch {
+            errorMessage = error.localizedDescription
+            return 10
+        }
+        
     }
 
 }

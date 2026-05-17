@@ -74,7 +74,7 @@ struct HistoryBudgetsListView: View {
                         .padding(.vertical, 20)
                 } else {
                     ForEach(visibleBudgets) { budget in
-                        BudgetRowView(budget: budget)
+                        HistoryBudgetRowView(budget: budget)
                             .contentShape(Rectangle())
 
                         if budget.id != visibleBudgets.last?.id {

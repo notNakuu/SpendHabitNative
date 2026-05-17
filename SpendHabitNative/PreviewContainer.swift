@@ -55,7 +55,8 @@ struct PreviewContainer<Content: View>: View {
         // Spending
         c.spendingVM.spendings = [
             Spending(id: 1, userId: 1, title: "Subscriptions", categoryId: 20, methodId: 2, createdDate: Date(), amount: 30),
-            Spending(id: 2, userId: 1, title: "Diesel 46L", categoryId: 17, methodId: 2, createdDate: Date(), amount: 68)
+            Spending(id: 2, userId: 1, title: "Diesel 46L", categoryId: 17, methodId: 2, createdDate: Date(), amount: 68),
+            Spending(id: 3, userId: 1, title: "Pills for alergy", categoryId: 18, methodId: 2, createdDate: Date(), amount: 20)
         ]
         
         c.spendingVM.totalSpentByCategory = [

@@ -152,7 +152,7 @@ struct RegisterView: View {
                 }
                 .padding(20)
                 .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 28))
+                .clipShape(RoundedRectangle(cornerRadius: 38))
                 .padding(.horizontal, 16)
                 .padding(.top, 20)
             }

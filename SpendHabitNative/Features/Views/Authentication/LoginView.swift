@@ -16,15 +16,16 @@ struct LoginView: View {
     @State private var showAlert = false
     
     var body: some View {
-        NavigationStack{
-            ZStack{
-                LinearGradient(
-                    colors: [Color.blue, Color.blue.opacity(0.7)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
-                
+        ZStack{
+            LinearGradient(
+                colors: [Color.blue, Color.blue.opacity(0.7)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+            
+            VStack(spacing: 20){
+                Spacer()
                 VStack(alignment: .leading, spacing: 16){
                     Text("Log in")
                         .font(.largeTitle.bold())
@@ -53,6 +54,7 @@ struct LoginView: View {
                                 set: { userVM.loginUser?.password = $0 }
                             ))
                             .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
                         }.padding()
                     }
                     .background(colorScheme == .light ? .white.opacity(0.7) : .black.opacity(0.7))
@@ -87,25 +89,36 @@ struct LoginView: View {
                 }
                 .padding(20)
                 .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 28))
+                .clipShape(RoundedRectangle(cornerRadius: 38))
                 .padding(.horizontal, 16)
                 .padding(.top, 20)
-            }
-            .onAppear {
-                userVM.loginUser = UserLogin(username: "", password: "")
-            }
-            // Modern replacement for the deprecated NavigationLink(isActive:)
-            .navigationDestination(isPresented: $isLoggedIn) {
-                MainView()
-                    .navigationBarBackButtonHidden(true)
-            }
-            .alert("Incorrect credentials", isPresented: $showAlert) {
-                Button("Continue") {
-                    
+                
+                Spacer()
+                
+                NavigationLink("Forgot password?") {
+                    EnterEmailView()
                 }
-            } message: {
-                Text("Invalid username or password")
+                .frame(maxWidth: .infinity)
+                .controlSize(.large)
+                .foregroundStyle(.white)
+                .bold()
+                .buttonStyle(.glassProminent)
             }
+        }
+        .onAppear {
+            userVM.loginUser = UserLogin(username: "", password: "")
+        }
+        // Modern replacement for the deprecated NavigationLink(isActive:)
+        .navigationDestination(isPresented: $isLoggedIn) {
+            MainView()
+                .navigationBarBackButtonHidden(true)
+        }
+        .alert("Incorrect credentials", isPresented: $showAlert) {
+            Button("Continue") {
+                
+            }
+        } message: {
+            Text("Invalid username or password")
         }
     }
     
