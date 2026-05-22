@@ -10,11 +10,13 @@ import SwiftUI
 struct NewIncomeView: View {
     let user: User
     var onAdd: (() -> Void)? = nil
-    
+    @Environment(\.colorScheme) var colorScheme
     @Environment(AppContainers.self) var containers
     @Environment(MethodViewModel.self) var methodVM
     var incomeVM: IncomeViewModel { containers.incomeVM }
     @Environment(\.dismiss) var dismiss
+    
+    @State private var isLoading = false
     
     var body: some View {
         NavigationView{
@@ -46,7 +48,8 @@ struct NewIncomeView: View {
             .navigationTitle("New Income")
             .toolbar{
                 ToolbarItem(placement: .confirmationAction){
-                    Button("Add") {
+                    Button {
+                        isLoading = true
                         Task {
                             await incomeVM.createIncome()
                             if incomeVM.responseCode == 0{
@@ -55,8 +58,18 @@ struct NewIncomeView: View {
                                 incomeVM.newIncome = nil
                             }
                         }
-                    }.disabled(incomeVM.newIncome?.title.isEmpty ?? true)
-                        .disabled(incomeVM.newIncome?.amount ?? 0 <= 0)
+                    }
+                    label: {
+                        if isLoading {
+                            ProgressView()
+                                .tint(colorScheme == .light ? .black : .white)
+                        } else {
+                            Text("Add")
+                        }
+                    }
+                    .disabled(incomeVM.newIncome?.title.isEmpty ?? true)
+                    .disabled(incomeVM.newIncome?.amount ?? 0 <= 0)
+                    .disabled(isLoading)
                 }
                 
                 ToolbarItem(placement: .cancellationAction) {

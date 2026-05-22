@@ -10,9 +10,12 @@ import SwiftUI
 struct NewSpendingView: View {
     let user: User
     var onAdd: (() -> Void)? = nil
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     @Environment(MethodViewModel.self) var methodVM
     @Environment(AppContainers.self) var containers
+    
+    @State private var isLoading = false
     
     var categoryVM: CategoryViewModel { containers.categoryVM }
     var spendingVM: SpendingViewModel { containers.spendingVM }
@@ -65,7 +68,8 @@ struct NewSpendingView: View {
             .navigationTitle("New Spending")
             .toolbar{
                 ToolbarItem(placement: .confirmationAction){
-                    Button("Add") {
+                    Button {
+                        isLoading = true
                         Task {
                             await spendingVM.createSpending()
                             if spendingVM.responseCode == 0{
@@ -73,8 +77,17 @@ struct NewSpendingView: View {
                                 dismiss()
                             }
                         }
-                    }.disabled(spendingVM.newSpending?.title.isEmpty ?? true)
-                        .disabled(spendingVM.newSpending?.amount ?? 0 <= 0)
+                    }label: {
+                        if isLoading {
+                            ProgressView()
+                                .tint(colorScheme == .light ? .black : .white)
+                        } else {
+                            Text("Add")
+                        }
+                    }
+                    .disabled(spendingVM.newSpending?.title.isEmpty ?? true)
+                    .disabled(spendingVM.newSpending?.amount ?? 0 <= 0)
+                    .disabled(isLoading)
                 }
                 
                 ToolbarItem(placement: .cancellationAction) {
