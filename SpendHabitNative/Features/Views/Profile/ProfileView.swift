@@ -94,7 +94,7 @@ struct ProfileView: View {
                     NavigationStack{
                         VStack {
                             Menu{
-                                NavigationLink(destination: UserInfoView()) {
+                                NavigationLink(destination: UserInfoView(user: user)) {
                                     HStack{
                                         Text("Edit User Info")
                                             .font(.headline)
@@ -102,10 +102,6 @@ struct ProfileView: View {
                                         Image(systemName: "chevron.forward")
                                     }
                                 }
-                                Divider()
-                                Button("Change Username"){ print("Test") }
-                                Button("Change email"){ print("Test") }
-                                Button("Change password"){ print("Test") }
                                 Divider()
                                 Button(role: .destructive){
                                     containers.resetApp()

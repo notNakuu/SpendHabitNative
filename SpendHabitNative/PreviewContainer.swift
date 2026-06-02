@@ -22,8 +22,8 @@ struct PreviewContainer<Content: View>: View {
     private let methodVM: MethodViewModel = {
         let vm = MethodViewModel()
         vm.methods = [
-            Method(id: 1, iconKey: "banknote.fill", name: "Cash"),
             Method(id: 2, iconKey: "creditcard.fill", name: "Card"),
+            Method(id: 1, iconKey: "banknote.fill", name: "Cash"),
             Method(id: 3, iconKey: "phone.fill", name: "Bizum"),
             Method(id: 4, iconKey: "building.columns.fill", name: "Transfer")
         ]

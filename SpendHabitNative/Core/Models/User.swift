@@ -51,3 +51,11 @@ struct UserLogin: Codable{
     var username: String
     var password: String
 }
+
+struct UpdateUserInfo: Codable{
+    var id: Int
+    var username: String
+    var email: String
+    var firstName: String
+    var lastName: String
+}

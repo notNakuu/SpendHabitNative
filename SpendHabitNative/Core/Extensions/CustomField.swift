@@ -8,11 +8,23 @@
 import SwiftUI
 
 struct CustomField: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
 
-#Preview {
-    CustomField()
+    let title: String
+    @Binding var text: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            TextField("", text: $text)
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Color(.tertiarySystemBackground))
+                )
+        }
+    }
 }

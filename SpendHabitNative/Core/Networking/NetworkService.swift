@@ -33,6 +33,24 @@ final class NetworkService{
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
+        print("========== REQUEST ==========")
+        print("URL:", request.url?.absoluteString ?? "")
+
+        if let body = request.httpBody,
+           let bodyString = String(data: body, encoding: .utf8) {
+            print("BODY:", bodyString)
+        }
+
+        print("========== RESPONSE ==========")
+
+        if let http = response as? HTTPURLResponse {
+            print("STATUS:", http.statusCode)
+        }
+
+        if let responseString = String(data: data, encoding: .utf8) {
+            print("RESPONSE:", responseString)
+        }
+        
         guard let http = response as? HTTPURLResponse, 200..<300 ~= http.statusCode else {
             throw APIError.unexpectedStatusCode((response as? HTTPURLResponse)?.statusCode ?? -1)
         }

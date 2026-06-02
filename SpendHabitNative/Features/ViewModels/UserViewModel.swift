@@ -209,6 +209,36 @@ class UserViewModel{
         }
         
     }
+    
+    func updateUserData(user: User) async -> Int {
+        let updateUser = UpdateUserInfo( id: user.id, username: user.username, email: user.email, firstName: user.firstName, lastName: user.lastName)
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            let endpoint = Endpoint(
+                path: "\(APIConfig.baseURL)/users/updateUserData",
+                queryItems: nil,
+                method: .post,
+                body: updateUser,
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
+            )
+
+            let result: ResponseModel<String?> = try await network.request(endpoint)
+            
+            self.errorMessage = result.message
+
+            return result.success
+
+        } catch {
+            errorMessage = error.localizedDescription
+            return 10
+        }
+    }
 
 }
 

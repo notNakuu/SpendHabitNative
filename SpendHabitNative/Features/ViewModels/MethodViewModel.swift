@@ -35,17 +35,25 @@ class MethodViewModel{
             let result: ResponseModel<[Method]> = try await network.request(endpoint)
             
             
-            if result.success == 0{
+            if result.success == 0 {
                 guard let data = result.data else { return }
                 
-                DispatchQueue.main.async { self.methods = data }
+                let sorted = data.sorted { lhs, rhs in
+                    if lhs.id == 2 { return true }   // Card first
+                    if rhs.id == 2 { return false }
+                    return lhs.id < rhs.id           // fallback order
+                }
+
+                DispatchQueue.main.async {
+                    self.methods = sorted
+                    
+                }
             }
         }
         catch{
             DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
             print(errorMessage ?? "No error message")
         }
-        
     }
     
     
