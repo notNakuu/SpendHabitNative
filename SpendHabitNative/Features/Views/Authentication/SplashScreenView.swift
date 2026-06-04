@@ -19,6 +19,8 @@ struct SplashScreenView: View {
     @State private var navigateToMain = false
     @State private var navigateToWelcome = false
     
+    @State private var isAuthenticating = false
+    
     var body: some View {
         NavigationStack{
             ZStack{
@@ -45,14 +47,23 @@ struct SplashScreenView: View {
                     .navigationBarBackButtonHidden(true)
             }
         }
-        .task{
+        .task {
             guard !hasStarted else { return }
             hasStarted = true
+
+            guard !isAuthenticating else { return }
+            isAuthenticating = true
+
             await startFlow()
         }
     }
     
     func checkSilentLogin() async {
+        
+        guard !isAuthenticating else { return }
+        isAuthenticating = true
+        defer { isAuthenticating = false }
+        
         guard let username = KeychainManager.get(key: "username"),
               let password = KeychainManager.get(key: "password")
         else {

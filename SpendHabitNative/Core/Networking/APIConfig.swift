@@ -8,11 +8,11 @@
 import Foundation
 
 
-// vm 162.55.221.208
-// localhost
+//      https://api.ammdev.net
+//      http://localhost:8080
 
 enum APIConfig{
-    static let baseURL: String = "http://localhost:8080"
+    static let baseURL: String = "https://api.ammdev.net"
 }
 
 
