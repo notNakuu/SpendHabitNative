@@ -11,6 +11,7 @@ struct ProfileView: View {
     let user: User
     @Environment(AppContainers.self) var containers
     @Environment(MethodViewModel.self) var methodVM
+    @Environment(AppState.self) var appState
     
     var userVM: UserViewModel { containers.userVM}
     var categoryVM: CategoryViewModel { containers.categoryVM }
@@ -19,8 +20,6 @@ struct ProfileView: View {
     var budgetVM: BudgetViewModel { containers.budgetVM }
     
     @Environment(\.colorScheme) var colorScheme
-    
-    @State private var navigateToWelcome = false
     
     var recentTransactions: [Transaction] {
            let spendings = spendingVM.spendings.map {
@@ -104,8 +103,8 @@ struct ProfileView: View {
                                 }
                                 Divider()
                                 Button(role: .destructive){
+                                    appState.isLoggedIn = false
                                     containers.resetApp()
-                                    navigateToWelcome = true
                                 } label: {
                                     Label("Logout", systemImage: "person.crop.circle")
                                 }
@@ -118,9 +117,6 @@ struct ProfileView: View {
             }
             .navigationTitle("\(user.firstName)")
             .background(colorScheme == .light ? .black.opacity(0.03) : .black)
-            .navigationDestination(isPresented: $navigateToWelcome){
-                WelcomeView()
-            }
             
         }
         .task{

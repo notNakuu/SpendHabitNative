@@ -44,7 +44,11 @@ struct HistoryRecentSpendingsView: View {
                         .foregroundStyle(.secondary)
                         .padding(.vertical, 20)
                 } else {
-                    ForEach(historyVM.spendings.prefix(2)) { spending in
+                    ForEach(
+                        historyVM.spendings
+                            .sorted { $0.createdDate > $1.createdDate }
+                            .prefix(2)
+                    ) { spending in
                         TransactionRowView(
                             transaction: TransactionMapper.from(
                                 spending: spending,
@@ -52,7 +56,7 @@ struct HistoryRecentSpendingsView: View {
                             )
                         )
 
-                        if spending.id != historyVM.spendings.prefix(2).last?.id {
+                        if spending.id != historyVM.spendings.sorted(by: { $0.createdDate > $1.createdDate }).prefix(2).last?.id {
                             Divider()
                         }
                     }

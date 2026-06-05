@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+@Observable
+class AppState {
+    var isLoggedIn = false
+}

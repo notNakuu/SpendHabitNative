@@ -28,6 +28,8 @@ struct PreviewContainer<Content: View>: View {
             Method(id: 4, iconKey: "building.columns.fill", name: "Transfer")
         ]
         return vm }()
+    
+    private let appState: AppState = AppState()
 
     private let containers: AppContainers = {
         let c = AppContainers()
@@ -91,5 +93,6 @@ struct PreviewContainer<Content: View>: View {
         content
             .environment(containers)
             .environment(methodVM)
+            .environment(appState)
     }
 }

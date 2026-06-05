@@ -16,13 +16,9 @@ struct TotalByCategoryView: View {
     
     var body: some View {
         VStack{
-            ForEach(spendingVM.totalSpentByCategory.indices, id: \.self) { index in
-                TotalByCategoryRowView(cs: spendingVM.totalSpentByCategory[index])
-                    .padding(5)
-
-                if index < spendingVM.totalSpentByCategory.count - 1 {
-                    Divider()
-                }
+            ForEach(spendingVM.totalSpentByCategory, id: \.categoryId) { item in
+                TotalByCategoryRowView(cs: item)
+                Divider()
             }
 
         }

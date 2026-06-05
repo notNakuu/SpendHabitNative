@@ -11,12 +11,13 @@ import LocalAuthentication
 struct SplashScreenView: View {
     @Environment(AppContainers.self) var containers
     @Environment(MethodViewModel.self) var methodVM
+    @Environment(AppState.self) var appState
     
     var userVM: UserViewModel { containers.userVM}
     @State private var hasStarted = false
     
     @State private var isCheckingLogin = true
-    @State private var navigateToMain = false
+    //@State private var navigateToMain = false
     @State private var navigateToWelcome = false
     
     
@@ -37,10 +38,10 @@ struct SplashScreenView: View {
                         .foregroundStyle(.white)
                 }
             }
-            .navigationDestination(isPresented: $navigateToMain) {
+            /*.navigationDestination(isPresented: $navigateToMain) {
                 MainView()
                     .navigationBarBackButtonHidden(true)
-            }
+            }*/
             .navigationDestination(isPresented: $navigateToWelcome){
                 WelcomeView()
                     .navigationBarBackButtonHidden(true)
@@ -90,7 +91,7 @@ struct SplashScreenView: View {
 
         if loginResult == .success {
             await waitForMethods()
-            navigateToMain = true
+            appState.isLoggedIn = true
         } else {
             navigateToWelcome = true
         }

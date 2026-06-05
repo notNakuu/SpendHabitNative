@@ -12,6 +12,7 @@ struct LoginView: View {
     @State private var isLoggedIn = false
     @Environment(AppContainers.self) var containers
     @Environment(MethodViewModel.self) var methodVM
+    @Environment(AppState.self) var appState
     var userVM: UserViewModel { containers.userVM}
     @State private var showAlert = false
     
@@ -71,7 +72,7 @@ struct LoginView: View {
                                 KeychainManager.save(key: "password", value: userVM.loginUser?.password ?? "")
                                 // Trigger navigation programmatically
                                 await MainActor.run {
-                                    isLoggedIn = true
+                                    appState.isLoggedIn = true
                                 }
                             }
                             else if createResult == .invalidInput {
@@ -109,10 +110,10 @@ struct LoginView: View {
             userVM.loginUser = UserLogin(username: "", password: "")
         }
         // Modern replacement for the deprecated NavigationLink(isActive:)
-        .navigationDestination(isPresented: $isLoggedIn) {
+        /*.navigationDestination(isPresented: $isLoggedIn) {
             MainView()
                 .navigationBarBackButtonHidden(true)
-        }
+        }*/
         .alert("Incorrect credentials", isPresented: $showAlert) {
             Button("Continue") {
                 

@@ -18,16 +18,26 @@ struct SpendHabitNativeApp: App {
     @State var methodVM = MethodViewModel()
     @State var appContainers = AppContainers()
     
+    @State var appState = AppState()
+    
     var body: some Scene {
         WindowGroup {
-            SplashScreenView()
-                .id(reloadID)
-                .environment(methodVM)
-                .environment(appContainers)
-                .task {
-                    await methodVM.loadMethods()
+            Group {
+                if !appState.isLoggedIn {
+                    SplashScreenView()
+                        .id(reloadID)
                 }
+                else {
+                    MainView()
+                }
+            }
+            .task {
+                await methodVM.loadMethods()
+            }
         }
+        .environment(methodVM)
+        .environment(appContainers)
+        .environment(appState)
         .onChange(of: scenePhase) { _, newPhase in
             switch newPhase {
             case .background:
@@ -52,7 +62,9 @@ struct SpendHabitNativeApp: App {
     }
     
     func resetView(){
-        appContainers.resetApp()
         reloadID = UUID()
+        appContainers.resetApp()
+        appState.isLoggedIn = false
+
     }
 }
