@@ -12,7 +12,7 @@ struct TransactionRowView: View {
 
     var formattedAmount: String {
         let sign = transaction.isIncome ? "+" : "-"
-        return "\(sign)\(String(format: "%.2f", transaction.amount)) €"
+        return "\(sign)\(transaction.amount.formatted(.number.precision(.fractionLength(2)))) €"
     }
 
     var body: some View {

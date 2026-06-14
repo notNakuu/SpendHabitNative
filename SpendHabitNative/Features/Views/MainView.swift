@@ -75,7 +75,7 @@ struct MainView: View {
     
     private var topHeader: some View {
         VStack{
-            if let user = userVM.user {
+            if userVM.user != nil {
                 HStack(alignment: .top) {
                     Text(selectedTab.title)
                         .font(.largeTitle.bold())
@@ -84,7 +84,7 @@ struct MainView: View {
                     Spacer()
                     
                     NavigationLink{
-                        ProfileView(user: user)
+                        ProfileView()
                     }label: {
                         Image(systemName: "person.circle.fill")
                             .font(.title)

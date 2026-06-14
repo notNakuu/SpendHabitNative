@@ -84,6 +84,8 @@ struct UserInfoView: View {
                         case 0:
                             alertMessage = "User updated successfully"
                             isSuccess = true
+                            
+                            containers.userVM.user = user
 
                         case 1:
                             alertMessage = "UserId or data cannot be null"

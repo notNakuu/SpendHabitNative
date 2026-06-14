@@ -81,10 +81,10 @@ struct TotalPieChartView: View {
 
                 VStack(spacing: 4) {
                     Text("Total")
-                        .font(showLegend ? .title2.bold() : .title.bold())
+                        .font(showLegend ? .headline.bold() : .title.bold())
 
                     Text("\(spendingVM.totalMonthlySpendings.formatted()) €")
-                        .font(showLegend ? .headline.bold() : .title2.bold())
+                        .font(showLegend ? .subheadline.bold() : .title2.bold())
                 }
             }
         }

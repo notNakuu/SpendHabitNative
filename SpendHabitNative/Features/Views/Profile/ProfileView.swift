@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ProfileView: View {
-    let user: User
     @Environment(AppContainers.self) var containers
     @Environment(MethodViewModel.self) var methodVM
     @Environment(AppState.self) var appState
@@ -20,6 +19,10 @@ struct ProfileView: View {
     var budgetVM: BudgetViewModel { containers.budgetVM }
     
     @Environment(\.colorScheme) var colorScheme
+    
+    var usr: User? {
+        containers.userVM.user
+    }
     
     var recentTransactions: [Transaction] {
            let spendings = spendingVM.spendings.map {
@@ -48,80 +51,82 @@ struct ProfileView: View {
     
     
     var body: some View {
-        NavigationStack{
-            ScrollView{
-                VStack(alignment: .leading){
+        if let user = usr {
+            NavigationStack{
+                ScrollView{
+                    VStack(alignment: .leading){
 
-                    HStack{
-                        Text("\(user.username)")
-                            .font(.headline)
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        Text("User since \(user.registeredDate.formatted(date: .abbreviated, time: .omitted))")
-                            .font(.headline)
-                            .foregroundStyle(.secondary)
+                        HStack{
+                            Text("\(user.username)")
+                                .font(.headline)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Text("User since \(user.registeredDate.formatted(date: .abbreviated, time: .omitted))")
+                                .font(.headline)
+                                .foregroundStyle(.secondary)
+                        }
+                        Divider()
                     }
-                    Divider()
-                }
-                .padding(.horizontal, 20)
-                
-                TransactionsView(transactions: recentTransactions)
-                
-                GeneralStatsView(user: user,totalSpent: spendingVM.allTimeSpent, totalSaved: totalSaved, totalIncome: incomeVM.totalAllTimeIncome)
-                
-                VStack {
-                    MonthlyChartView()
-                }
-                .padding(12)
-                
-                NavToMyCategoriesView(user: user)
-                
-                VStack{
-                    CategoryOverviewSectionView(
-                        user: user,
-                        data: spendingVM.totalSpentByCategory
-                    )
-                }
-                .padding(.vertical, 12)
+                    .padding(.horizontal, 20)
+                    
+                    TransactionsView(transactions: recentTransactions)
+                    
+                    GeneralStatsView(user: user,totalSpent: spendingVM.allTimeSpent, totalSaved: totalSaved, totalIncome: incomeVM.totalAllTimeIncome)
+                    
+                    VStack {
+                        MonthlyChartView()
+                    }
+                    .padding(12)
+                    
+                    NavToMyCategoriesView(user: user)
+                    
+                    VStack{
+                        CategoryOverviewSectionView(
+                            user: user,
+                            data: spendingVM.totalSpentByCategory
+                        )
+                    }
+                    .padding(.vertical, 12)
 
-                
-            }
-            .scrollIndicators(.hidden)
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationStack{
-                        VStack {
-                            Menu{
-                                NavigationLink(destination: UserInfoView(user: user)) {
-                                    HStack{
-                                        Text("Edit User Info")
-                                            .font(.headline)
-                                        Spacer()
-                                        Image(systemName: "chevron.forward")
+                    
+                }
+                .scrollIndicators(.hidden)
+                .navigationBarTitleDisplayMode(.large)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationStack{
+                            VStack {
+                                Menu{
+                                    NavigationLink(destination: UserInfoView(user: user)) {
+                                        HStack{
+                                            Text("Edit User Info")
+                                                .font(.headline)
+                                            Spacer()
+                                            Image(systemName: "chevron.forward")
+                                        }
                                     }
+                                    Divider()
+                                    Button(role: .destructive){
+                                        appState.isLoggedIn = false
+                                        containers.resetApp()
+                                    } label: {
+                                        Label("Logout", systemImage: "person.crop.circle")
+                                    }
+                                }label:{
+                                    Image(systemName: "gearshape.fill")
                                 }
-                                Divider()
-                                Button(role: .destructive){
-                                    appState.isLoggedIn = false
-                                    containers.resetApp()
-                                } label: {
-                                    Label("Logout", systemImage: "person.crop.circle")
-                                }
-                            }label:{
-                                Image(systemName: "gearshape.fill")
                             }
                         }
                     }
                 }
+                .navigationTitle("\(user.firstName)")
+                .background(colorScheme == .light ? .black.opacity(0.03) : .black)
+                
             }
-            .navigationTitle("\(user.firstName)")
-            .background(colorScheme == .light ? .black.opacity(0.03) : .black)
-            
-        }
-        .task{
-            await spendingVM.loadTotalAmountSpent(for: user)
-            await incomeVM.loadAllTimeIncomes(user: user)
+            .task{
+                await spendingVM.loadTotalAmountSpent(for: user)
+                await incomeVM.loadAllTimeIncomes(user: user)
+            }
         }
         
     }
@@ -129,6 +134,6 @@ struct ProfileView: View {
 
 #Preview {
     PreviewContainer{
-        ProfileView(user: User.mock)
+        ProfileView()
     }
 }
