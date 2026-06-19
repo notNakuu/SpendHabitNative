@@ -239,6 +239,33 @@ class UserViewModel{
             return 10
         }
     }
+    
+    func deleteUser() async -> Int {
+        do{
+            let endpoint = Endpoint(
+                path: "\(APIConfig.baseURL)/users/deleteUser",
+                queryItems: [
+                    URLQueryItem(name: "id", value: "\(user?.id ?? 0)")
+                ],
+                method: .post,
+                body: nil,
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer \(APIToken.token)"
+                ]
+            )
+            let result: ResponseModel<String?> = try await network.request(endpoint)
+            
+            self.errorMessage = result.message
+
+            return result.success
+        }
+        catch {
+            errorMessage = error.localizedDescription
+            return 10
+        }
+    }
 
 }
 

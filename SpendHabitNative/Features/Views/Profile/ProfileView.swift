@@ -19,6 +19,7 @@ struct ProfileView: View {
     var budgetVM: BudgetViewModel { containers.budgetVM }
     
     @Environment(\.colorScheme) var colorScheme
+    @State private var showDeleteView = false
     
     var usr: User? {
         containers.userVM.user
@@ -112,6 +113,12 @@ struct ProfileView: View {
                                     } label: {
                                         Label("Logout", systemImage: "person.crop.circle")
                                     }
+                                    Divider()
+                                    Button(role: .destructive) {
+                                        showDeleteView = true
+                                    } label: {
+                                        Label("Delete Account", systemImage: "trash")
+                                    }
                                 }label:{
                                     Image(systemName: "gearshape.fill")
                                 }
@@ -120,6 +127,9 @@ struct ProfileView: View {
                     }
                 }
                 .navigationTitle("\(user.firstName)")
+                .navigationDestination(isPresented: $showDeleteView) {
+                    AskConfirmDeleteView()
+                }
                 .background(colorScheme == .light ? .black.opacity(0.03) : .black)
                 
             }
