@@ -55,9 +55,9 @@ Async/Await is used throughout the networking layer to ensure modern concurrency
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/1f512c98-955b-4e0a-8ecd-52bae6e0d8fb" width="260"/>
-  <img src="https://github.com/user-attachments/assets/fc261e08-6478-4aa9-92e4-430fe1564ef6" width="260"/>
-  <img src="https://github.com/user-attachments/assets/dab148dd-aebc-446d-8f15-0eca357f1845" width="260"/>
+  <img width="260" src="https://github.com/user-attachments/assets/75f7db22-9aad-444b-8be0-63f95b70528e" />
+  <img width="260" src="https://github.com/user-attachments/assets/3e7ca661-af6e-4bd4-bf5c-f27958780848" />
+  <img width="260" src="https://github.com/user-attachments/assets/3b2e518a-510c-4eaf-829b-ea339dd3afa9" />
 </p>
 
 > ⚠️ Full feature set includes additional views for transactions, analytics, and profile management.
@@ -65,3 +65,55 @@ Async/Await is used throughout the networking layer to ensure modern concurrency
 ---
 
 ## 🧩 Project Structure
+SpendHabitNative
+├── Models
+├── Views
+├── ViewModels
+├── Services
+├── Core
+
+---
+
+## 🧠 What I Learned
+
+- Building scalable MVVM architecture in SwiftUI
+- Managing state and persistence with SwiftData
+- Implementing async/await networking
+- Designing and consuming REST APIs
+- Backend development with Spring Boot
+- Structuring a full-stack mobile application
+- Working with real-world app constraints and UX flows
+
+---
+
+## 📦 Backend
+
+The backend is built separately using:
+
+- Spring Boot
+- PostgreSQL
+- Docker
+
+It provides:
+- Authentication
+- Expense CRUD operations
+- Category management
+- Analytics data endpoints
+
+---
+
+## 📈 Project Status
+
+Active development – new features and improvements are continuously being added.
+
+---
+
+## 🔗 Related Projects
+
+- Track Them – Subscription tracking iOS app (App Store published)
+
+---
+
+## 📌 Notes
+
+This project is part of a personal portfolio focused on becoming a professional iOS developer.
